@@ -1,0 +1,11 @@
+#!/bin/bash
+
+set -e
+DIR=$(dirname "$(realpath "$BASH_SOURCE")")
+source "$DIR/.common"
+cd "$DIR/.."
+
+cmd docker-compose -f docker-compose.yml -f docker-compose.build.yml stop
+cmd docker-compose -f docker-compose.yml -f docker-compose.build.yml rm -v -f
+cmd docker volume rm vol-rabbitmq-data
+cmd docker volume rm vol-api-data
