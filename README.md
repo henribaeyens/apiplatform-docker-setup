@@ -9,6 +9,10 @@ bin/setup
 ```
 Refer to the README for more info on how to use this kit.
 
+# About this
+
+It is really a barebones installation for an api-platform project (with Symfony 6.4) for reference and experimentation.  
+The only things I've added are the mailer service and the a very simple message handler.   
 
 # Services
 

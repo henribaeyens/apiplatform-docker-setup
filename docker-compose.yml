@@ -108,7 +108,7 @@ services:
             - traefik.enable=true
             - traefik.docker.network=reverse-proxy
             - traefik.http.routers.${PROJECT_NAME}_rmq.rule=Host(`rmq.${PROJECT_NAME}.${BASE_DOMAIN}`)
-            - traefik.http.routers.${PROJECT_NAME}_nginx.middlewares=redirecthttps@file
+            - traefik.http.routers.${PROJECT_NAME}_rmq.middlewares=redirecthttps@file
             - traefik.http.services.${PROJECT_NAME}_rmq.loadbalancer.server.port=15672
       volumes:
             - rabbitmq_data:/var/lib/rabbitmq
