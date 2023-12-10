@@ -33,7 +33,7 @@ Accessible on https://rmq.api.docker.localhost
 
 ```
 git clone https://github.com/henribaeyens/apiplatform-docker-setup.git
-cd apiplatform-docker-setup.git
+cd apiplatform-docker-setup
 ```
 Check that the files in the bin directory are executable.
 ```
