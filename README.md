@@ -9,10 +9,10 @@ bin/setup
 ```
 Refer to the README for more info on how to use this kit.
 
-# About this
+# About
 
-It is really a barebones installation for an api-platform project (with Symfony 6.4) for reference and experimentation.  
-The only things I've added are the mailer service and the a very simple message handler.   
+This is really a barebones installation for an api-platform project (with Symfony 6.4) for both reference and experimentation.  
+The only things I've added so far are the mailer service and a very simple message handler.   
 
 # Services
 
@@ -81,7 +81,7 @@ Send an email.
 You can navigate to https://mail.api.docker.localhost to check that the email is in the mailbox
 ### Test 2
 Dispatch a message to the RabbitMQ broker.   
-You can check the RabbitMQ management interface at https://rmq.api.docker.localhost to see if the message is there.   
+You can check the RabbitMQ management interface at https://rmq.api.docker.localhost to see if it is there.   
 Invoke the following command to consume the message:
 
 ```
