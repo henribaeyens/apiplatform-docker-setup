@@ -85,7 +85,7 @@
         }
     },
     "require-dev": {
-        "pestphp/pest": "^2.26",
+        "pestphp/pest": "^2.28",
         "symfony/maker-bundle": "^1.52",
         "symfony/var-dumper": "6.4.*"
     }
