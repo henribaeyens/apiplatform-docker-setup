@@ -1,0 +1,38 @@
+#!/bin/sh
+
+set -e
+DIR=$(dirname "$0")
+source "$DIR/.common"
+cd "$DIR/.."
+
+usage() {
+    echo "Run migrations for a given env"
+    echo
+    echo "Usage: $0 [options]"
+    echo "Options:"
+    echo "  -e                  env selector"
+    echo "  -h|--help           display this help."
+}
+
+ENV=dev
+
+while [ $# -gt 0 ]; do
+    case $1 in
+        -e)
+            shift
+            ENV=$1
+            ;;
+        -h|--help)
+            usage
+            exit
+            ;;
+        *)
+            error "Unknown option $1"
+            exit
+            ;;
+    esac
+    shift
+done
+
+
+cmd docker-compose run --rm srvc_php bin/console d:m:m --env=$ENV

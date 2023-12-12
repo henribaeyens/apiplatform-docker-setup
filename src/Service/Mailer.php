@@ -50,4 +50,22 @@ class Mailer {
         }
     }
 
+    public function userCreatedNotification(string $message): bool 
+    {
+        $email = (new Email())
+            ->from('hello@example.com')
+            ->to('you@example.com')
+            ->subject('A new user has been created')
+            ->text($message)
+            ->html($message);
+
+        try {
+            $this->mailer->send($email);
+            return true;
+        } catch (TransportExceptionInterface $e) {
+            dd($e);
+            return false;
+        }
+    }
+
 }

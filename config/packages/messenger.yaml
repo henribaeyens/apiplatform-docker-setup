@@ -14,6 +14,7 @@ framework:
         routing:
             # Route your messages to the transports
             'App\Message\MailNotification': async
+            'App\Message\UserCreated': async
 
 # when@test:
 #    framework:

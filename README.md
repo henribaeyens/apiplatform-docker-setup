@@ -70,8 +70,13 @@ bin/install
 # Testing
 
 Tests are done using pest. Read about the pest testing framework at https://pestphp.com/docs/  
-A few tests have been implemented.
+A few very basic tests have been implemented.  
+First, make sure the *test* database is created: api_test. Then run the migrations on the test environment:
+```
+bin/migrate -e test
+```
 
+Run the tests with the following command:
 ```
 bin/test
 ```
@@ -83,6 +88,9 @@ You can navigate to https://mail.api.docker.localhost to check that the email is
 Dispatch a message to the RabbitMQ broker.   
 You can check the RabbitMQ management interface at https://rmq.api.docker.localhost to see if it is there.   
 Invoke the following command to consume the message:
+### Test 3
+A user is created using a post request. It succeeds if the response yields a 201 status code.   
+Additionally, it sends a message to the RabbitMQ broker, which, when consumed, sends an email.
 
 ```
 bin/bash # access the php container

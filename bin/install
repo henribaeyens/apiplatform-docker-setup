@@ -1,6 +1,8 @@
 #!/bin/sh
 
 set -e
-. "bin/.common"
+DIR=$(dirname "$(realpath "$BASH_SOURCE")")
+source "$DIR/.common"
+cd "$DIR/.."
 
 cmd docker-compose run --rm srvc_php composer install
