@@ -97,4 +97,4 @@ bin/bash # access the php container
 bin/console messenger:consume -vv
 ```
 
-Another email should be sent.
+Two emails (test 2 and test 3) are sent.
