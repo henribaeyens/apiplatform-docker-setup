@@ -81,7 +81,7 @@ Invoke the following command to consume the message:
 bin/bash # access the php container
 bin/console messenger:consume -vv
 ```
-There should be three message queued: the message sent with test 2 and one for each user created with the fixtures loaded during the build process.
+There should be three messages queued: the message sent with test 2 and one for each user created with the fixtures loaded during the build process.
 ### Test 3
 An authentification attempt fails.
 ### Test 4
