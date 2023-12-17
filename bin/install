@@ -1,8 +1,19 @@
-#!/bin/sh
+#!/bin/bash
 
 set -e
 DIR=$(dirname "$(realpath "$BASH_SOURCE")")
 source "$DIR/.common"
 cd "$DIR/.."
 
-cmd docker-compose run --rm srvc_php composer install
+cmd composer install --no-scripts
+
+cmd bin/console doctrine:database:create --env test --if-not-exists
+cmd bin/console doctrine:migrations:migrate --no-interaction
+cmd bin/console doctrine:migrations:sync-metadata-storage --no-interaction
+cmd bin/console doctrine:migrations:migrate --env test --no-interaction
+cmd bin/console doctrine:migrations:sync-metadata-storage --env test --no-interaction
+cmd bin/console doctrine:fixtures:load --env test --no-interaction
+cmd bin/console lexik:jwt:generate-keypair --skip-if-exists --no-interaction
+
+cmd npm install
+

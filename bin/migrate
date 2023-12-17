@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 set -e
 DIR=$(dirname "$0")
@@ -20,7 +20,14 @@ while [ $# -gt 0 ]; do
     case $1 in
         -e)
             shift
-            ENV=$1
+            case $1 in
+                test|dev|prod)
+                    ENV=$1
+                    ;;
+                *)
+                    error "Unknown environment $1"
+                    exit 1
+            esac
             ;;
         -h|--help)
             usage
@@ -35,4 +42,4 @@ while [ $# -gt 0 ]; do
 done
 
 
-cmd docker-compose run --rm srvc_php bin/console d:m:m --env=$ENV
+cmd docker-compose run --rm srvc_php bin/console doctrine:migrations:migrate --env $ENV --no-interaction

@@ -39,44 +39,33 @@ Accessible on https://rmq.api.docker.localhost
 git clone https://github.com/henribaeyens/apiplatform-docker-setup.git
 cd apiplatform-docker-setup
 ```
-Check that the files in the bin directory are executable.
-```
-apiplatform-docker-setup$ ls -al bin
-total 80
-drwxr-xr-x  12 apple  staff  384 Dec  9 16:45 .
-drwxr-xr-x  23 apple  staff  736 Dec 10 15:12 ..
--rw-r--r--   1 apple  staff  626 Dec  9 16:45 .common
--rwxr-xr-x   1 apple  staff  882 Dec  9 16:45 bash
--rwxr-xr-x   1 apple  staff  861 Dec  9 16:45 build
--rwxr-xr-x   1 apple  staff  325 Dec  9 16:45 clean
--rwxr-xr-x   1 apple  staff  492 Dec  9 16:45 console
--rwxr-xr-x   1 apple  staff   89 Dec  9 16:45 install
--rwxr-xr-x   1 apple  staff  119 Dec  9 16:45 restart
--rwxr-xr-x   1 apple  staff  125 Dec  9 16:45 start
--rwxr-xr-x   1 apple  staff  123 Dec  9 16:45 stop
--rwxr-xr-x   1 apple  staff   91 Dec  9 16:45 test
-
-```
+Check that the files in the bin directory are executable.  
 Build the containers with
 
 ```
 bin/build
 ```
-Install packages with
-```
-bin/install
-```
+
+## What the build does
+
+- set up the containers
+- install packages using composer
+- create the test database if it does not exist
+- run the migrations for both the **test** and **dev** environments
+- generate the jwt keys if they do not exist
+- install npm packages necessary to run the React admin
 
 # Testing
 
 Tests are done using pest. Read about the pest testing framework at https://pestphp.com/docs/  
 A few very basic tests have been implemented.  
-First, make sure the *test* database is created: api_test. Then run the migrations on the test environment:
-```
-bin/migrate -e test
-```
 
 Run the tests with the following command:
+```
+bin/bash # connects to the php container
+./vendor/bin/pest
+```
+or
 ```
 bin/test
 ```
@@ -88,13 +77,13 @@ You can navigate to https://mail.api.docker.localhost to check that the email is
 Dispatch a message to the RabbitMQ broker.   
 You can check the RabbitMQ management interface at https://rmq.api.docker.localhost to see if it is there.   
 Invoke the following command to consume the message:
-### Test 3
-A user is created using a post request. It succeeds if the response yields a 201 status code.   
-Additionally, it sends a message to the RabbitMQ broker, which, when consumed, sends an email.
-
 ```
 bin/bash # access the php container
 bin/console messenger:consume -vv
 ```
+There should be three message queued: the message sent with test 2 and one for each user created with the fixtures loaded during the build process.
+### Test 3
+An authentification attempt fails.
+### Test 4
+An authentication succeeds
 
-Two emails (test 2 and test 3) are sent.

@@ -13,21 +13,40 @@ security:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
-        main:
-            lazy: true
+
+        docs:
+            pattern: ^/api/docs/
+            security: false
+
+        api:
+            pattern: ^/api/
+            stateless: true
             provider: app_user_provider
+            jwt: ~
 
-            # activate different ways to authenticate
-            # https://symfony.com/doc/current/security.html#the-firewall
+        main:
+            stateless: true
+            provider: app_user_provider
+            json_login:
+                check_path: auth
+                username_path: email
+                password_path: password
+                success_handler: lexik_jwt_authentication.handler.authentication_success
+                failure_handler: lexik_jwt_authentication.handler.authentication_failure
+            #user_checker: App\Security\UserChecker
+            jwt: ~
 
-            # https://symfony.com/doc/current/security/impersonating_user.html
-            # switch_user: true
-
-    # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:
-        # - { path: ^/admin, roles: ROLE_ADMIN }
-        # - { path: ^/api, roles: ROLE_USER }
+        - { path: ^/api/docs, role: PUBLIC_ACCESS }
+        - { path: ^/api/admin, roles: ROLE_ADMIN }
+        - { path: ^/api, roles: ROLE_USER }
+        - { path: ^/authentication, role: PUBLIC_ACCESS }
+        #- { path: ^/password, role: IS_AUTHENTICATED_ANONYMOUSLY }
+        #- { path: ^/api/signup, role: IS_AUTHENTICATED_ANONYMOUSLY }
+        #- { path: ^/signup, role: IS_AUTHENTICATED_ANONYMOUSLY }
+        #- { path: ^/admin/login, role: IS_AUTHENTICATED_ANONYMOUSLY }
+        #- { path: ^/admin, role: ROLE_ADMIN }
 
 when@test:
     security:

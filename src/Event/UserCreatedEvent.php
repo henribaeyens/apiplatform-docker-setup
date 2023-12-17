@@ -1,10 +1,11 @@
 <?php
 
-namespace App\EventListener;
+namespace App\Event;
 
 use App\Entity\User;
-use App\Message\UserCreated as UserCreatedMessage;
+use App\Enum\UserRole;
 use Doctrine\ORM\Events;
+use App\Message\UserCreated as UserCreatedMessage;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Doctrine\Bundle\DoctrineBundle\Attribute\AsEntityListener;
 
@@ -19,6 +20,8 @@ final class UserCreatedEvent
 
     public function newUserCreated(User $user): void
     {        
-        $this->msgBusInterface->dispatch(new UserCreatedMessage('Welcome ' . $user->getFirstName()));
+        if (!$user->hasRole(UserRole::ADMIN->value)) {
+            $this->msgBusInterface->dispatch(new UserCreatedMessage('Welcome ' . $user->getFirstName()));
+        }
     }
 }

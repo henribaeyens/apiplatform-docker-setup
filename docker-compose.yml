@@ -33,12 +33,15 @@ services:
             context: ./docker/php
             args:
                 - IMAGE=${PHP_IMAGE}
+                - NODE_VERSION=${NODE_VERSION}
                 - DATABASE_DRIVER=${DATABASE_DRIVER}
                 - UID=${UID}
                 - GID=${GID}
         depends_on:
             srvc_mariadb:
-              condition: service_healthy
+                condition: service_healthy
+            srvc_rabbitmq:
+                condition: service_healthy
         networks:
             - back
             - reverse-proxy
@@ -46,6 +49,8 @@ services:
             - ./.env
         volumes:
             - .:/var/www/html
+            #- /var/www/html/vendor/
+            #- /var/www/html/node_modules/
 
     srvc_nginx:
         container_name: ${PROJECT_NAME}_nginx
@@ -78,7 +83,7 @@ services:
             - traefik.http.routers.${PROJECT_NAME}_mail.rule=Host(`mail.${PROJECT_NAME}.${BASE_DOMAIN}`)
             - traefik.http.routers.${PROJECT_NAME}_mail.middlewares=redirecthttps@file
             - traefik.http.services.${PROJECT_NAME}_mail.loadbalancer.server.port=80
-    
+
     srvc_pma:
         container_name: ${PROJECT_NAME}_pma
         image: phpmyadmin
@@ -96,22 +101,27 @@ services:
             - traefik.http.routers.${PROJECT_NAME}_pma.middlewares=redirecthttps@file
 
     srvc_rabbitmq:
-      container_name: ${PROJECT_NAME}_rabbitmq
-      image: rabbitmq:3.12-management-alpine
-      environment:
+        container_name: ${PROJECT_NAME}_rabbitmq
+        image: rabbitmq:3.12-management-alpine
+        environment:
             - RABBITMQ_DEFAULT_USER=${BACKEND_RABBITMQ_USERNAME}
             - RABBITMQ_DEFAULT_PASS=${BACKEND_RABBITMQ_PASSWORD}
-      networks:
+        networks:
             - back
             - reverse-proxy
-      labels:
+        labels:
             - traefik.enable=true
             - traefik.docker.network=reverse-proxy
             - traefik.http.routers.${PROJECT_NAME}_rmq.rule=Host(`rmq.${PROJECT_NAME}.${BASE_DOMAIN}`)
             - traefik.http.routers.${PROJECT_NAME}_rmq.middlewares=redirecthttps@file
             - traefik.http.services.${PROJECT_NAME}_rmq.loadbalancer.server.port=15672
-      volumes:
+        volumes:
             - rabbitmq_data:/var/lib/rabbitmq
+        healthcheck:
+            test: rabbitmq-diagnostics -q ping
+            interval: 10s
+            timeout: 5s
+            retries: 3
 
 volumes:
     rabbitmq_data:
