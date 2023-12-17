@@ -40,7 +40,7 @@ git clone https://github.com/henribaeyens/apiplatform-docker-setup.git
 cd apiplatform-docker-setup
 ```
 Check that the files in the bin directory are executable.  
-Build the containers with
+Build the project using the following:
 
 ```
 bin/build
