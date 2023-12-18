@@ -1,8 +1,9 @@
 <?php
 
 use App\Service\Mailer;
-use App\Message\MailNotification as MailNotificationMessage;
 use Symfony\Component\HttpFoundation\Response;
+use App\Message\MailNotification as MailNotificationMessage;
+use ApiPlatform\Symfony\Security\Exception\AccessDeniedException;
 
 uses(App\Tests\ApiTestCase::class);
 
@@ -31,7 +32,7 @@ it('fails to authenticate a user', function () {
 
     $response = static::createClient(
         [],
-        ['base_uri' => 'https://api.docker.localhost']
+        ['base_uri' => $this->baseUrl],
     )->request(
         'POST', 
         '/authentication',
@@ -55,7 +56,7 @@ it('authenticates a user', function () {
 
     $response = static::createClient(
         [],
-        ['base_uri' => 'https://api.docker.localhost']
+        ['base_uri' => $this->baseUrl],
     )->request(
         'POST', 
         '/authentication',
@@ -68,6 +69,50 @@ it('authenticates a user', function () {
         ]
     );
     expect($response->getStatusCode())->toBe(Response::HTTP_OK);
+    expect($response->toArray())->toHaveKey('token');
+});
+
+it('authenticates (should succeed) and get a list of all users (should succeed in failing: only ADMINs can)', function () {    
+    $payload = [
+        'email' => 'user1@api.local',
+        'password' => 'notsosecret',
+    ];
+
+    $client = static::createClient(
+        [],
+        ['base_uri' => $this->baseUrl],
+    );
+
+    $response = $client->request(
+        'POST', 
+        '/authentication',
+        [
+            'body' => json_encode($payload),
+            'headers' => [
+                'accept' => ['application/ld+json'],
+                'CONTENT_TYPE' => 'application/ld+json',
+            ]
+        ]
+    );
+    expect($response->getStatusCode())->toBe(Response::HTTP_OK);
+
+    $token = $response->toArray()['token'];
+
+    $this->expectException(AccessDeniedException::class);
+
+    $client->getKernelBrowser()->catchExceptions(false);
+
+    $client->request(
+        'GET', 
+        '/api/users',
+        [
+            'headers' => [
+                'accept' => ['application/ld+json'],
+                'CONTENT_TYPE' => 'application/ld+json',
+                'Authorization' => 'Bearer ' . $token,
+            ]
+        ]
+    );
 });
 
 /*

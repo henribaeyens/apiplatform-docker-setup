@@ -86,4 +86,6 @@ There should be three messages queued: the message sent with test 2 and one for 
 An authentification attempt fails.
 ### Test 4
 An authentication succeeds
+### Test 5
+An authentication succeeds but a request to get users fail (throws an access denied exception). A user who does not have the admin role cannot request other users.
 
