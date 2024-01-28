@@ -1,30 +1,51 @@
 security:
-    # https://symfony.com/doc/current/security.html#registering-the-user-hashing-passwords
     password_hashers:
         Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: 'auto'
-    # https://symfony.com/doc/current/security.html#loading-the-user-the-user-provider
+
     providers:
-        # used to reload user from session & other features (e.g. switch_user)
         app_user_provider:
             entity:
                 class: App\Entity\User
                 property: email
+
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
 
         docs:
-            pattern: ^/api/docs/
+            pattern: ^/%api_prefix%/docs/
             security: false
 
         api:
-            pattern: ^/api/
+            pattern: ^/%api_prefix%/
             stateless: true
             provider: app_user_provider
             jwt: ~
 
-        main:
+        admin:
+            pattern: ^/admin/
+            stateless: false
+            provider: app_user_provider
+            context: user
+            form_login:
+                username_parameter: _email
+                password_parameter: _password
+                login_path: admin_login
+                check_path: admin_login
+                default_target_path: sonata_admin_dashboard
+            logout:
+                path: admin_logout
+                target: admin_login
+                clear_site_data:
+                    - cookies
+                    - storage
+            remember_me:
+                secret: '%env(APP_SECRET)%'
+                lifetime: 2629746
+                path: /admin
+
+        auth:
             stateless: true
             provider: app_user_provider
             json_login:
@@ -33,20 +54,22 @@ security:
                 password_path: password
                 success_handler: lexik_jwt_authentication.handler.authentication_success
                 failure_handler: lexik_jwt_authentication.handler.authentication_failure
-            #user_checker: App\Security\UserChecker
+        #     #user_checker: App\Security\UserChecker
             jwt: ~
 
-    # Note: Only the *first* access control that matches will be used
     access_control:
-        - { path: ^/api/docs, role: PUBLIC_ACCESS }
-        - { path: ^/api/admin, roles: ROLE_ADMIN }
-        - { path: ^/api, roles: ROLE_USER }
+        - { path: ^/%api_prefix%$, roles: PUBLIC_ACCESS }
+        - { path: ^/%api_prefix%/(docs|docs.jsonld|contexts/Entrypoint), role: PUBLIC_ACCESS }
+        - { path: ^/%api_prefix%/, roles: ROLE_USER }
         - { path: ^/authentication, role: PUBLIC_ACCESS }
-        #- { path: ^/password, role: IS_AUTHENTICATED_ANONYMOUSLY }
-        #- { path: ^/api/signup, role: IS_AUTHENTICATED_ANONYMOUSLY }
-        #- { path: ^/signup, role: IS_AUTHENTICATED_ANONYMOUSLY }
-        #- { path: ^/admin/login, role: IS_AUTHENTICATED_ANONYMOUSLY }
-        #- { path: ^/admin, role: ROLE_ADMIN }
+        - { path: ^/admin/login$, role: PUBLIC_ACCESS }
+        - { path: ^/admin/logout$, role: PUBLIC_ACCESS }
+        - { path: ^/admin/, role: ROLE_ADMIN }
+
+    role_hierarchy:
+        ROLE_ADMIN:
+            - ROLE_APP_ADMIN_USERS_ALL
+            - ROLE_USER
 
 when@test:
     security:

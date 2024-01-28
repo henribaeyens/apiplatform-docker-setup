@@ -2,12 +2,14 @@
 
 namespace App\Entity;
 
+use App\Entity\Trait\Timestampable;
 use App\Enum\UserRole;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\Put;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Delete;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use App\State\UserPasswordHasher;
 use App\Repository\UserRepository;
@@ -49,7 +51,7 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
     denormalizationContext: ['groups' => ['user:create', 'user:update']],
 )]
 #[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
-
+#[ORM\HasLifecycleCallbacks]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
@@ -58,7 +60,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Groups(['user:read'])]
     private ?int $id = null;
 
-    #[ORM\Column(length: 180, unique: true)]
+    #[ORM\Column(type: Types::STRING, length: 180, unique: true)]
     #[Groups(['user:read', 'user:create', 'user:update'])]
     #[Assert\NotBlank]
     #[Assert\Email]
@@ -70,25 +72,27 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @var string The hashed password
      */
-    #[ORM\Column]
+    #[ORM\Column(type: Types::STRING)]
     private ?string $password = null;
 
     #[Assert\NotBlank(groups: ['user:create'])]
     #[Groups(['user:create', 'user:update'])]
     private ?string $plainPassword = null;
 
-    #[ORM\Column(length: 64)]
+    #[ORM\Column(type: Types::STRING, length: 64)]
     #[Groups(['user:read', 'user:create', 'user:update'])]
     #[Assert\NotBlank]
     private ?string $firstName = null;
 
-    #[ORM\Column(length: 64)]
+    #[ORM\Column(type: Types::STRING, length: 64)]
     #[Groups(['user:read', 'user:create', 'user:update'])]
     #[Assert\NotBlank]
     private ?string $lastName = null;
 
-    #[ORM\Column(options: ['default' => false])]
+    #[ORM\Column(type: Types::BOOLEAN, options: ['default' => false])]
     private bool $verified = false;
+
+    use Timestampable;
 
     public function getId(): ?int
     {
@@ -117,14 +121,21 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return (string) $this->email;
     }
 
+    public function __toString(): string
+    {
+        return "{$this->firstName} {$this->lastName} ({$this->email})";
+    }
+
     /**
      * @see UserInterface
      */
     public function getRoles(): array
     {
         $roles = $this->roles;
-        // guarantee every user at least has ROLE_USER
-        $roles[] = UserRole::USER->value;
+        // guarantee user at least has ROLE_USER if none is set
+        if (empty($roles)) {
+            $roles[] = UserRole::USER->value;
+        }
 
         return array_unique($roles);
     }

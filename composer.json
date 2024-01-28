@@ -16,6 +16,9 @@
         "nelmio/cors-bundle": "^2.4",
         "phpdocumentor/reflection-docblock": "^5.3",
         "phpstan/phpdoc-parser": "^1.24",
+        "scienta/doctrine-json-functions": "^5.3",
+        "sonata-project/admin-bundle": "^4.29",
+        "sonata-project/doctrine-orm-admin-bundle": "^4.15",
         "symfony/amqp-messenger": "6.4.*",
         "symfony/asset": "6.4.*",
         "symfony/browser-kit": "6.4.*",
@@ -32,10 +35,9 @@
         "symfony/runtime": "6.4.*",
         "symfony/security-bundle": "6.4.*",
         "symfony/serializer": "6.4.*",
+        "symfony/translation": "6.4.*",
         "symfony/twig-bundle": "6.4.*",
-        "symfony/ux-react": "^2.13",
         "symfony/validator": "6.4.*",
-        "symfony/webpack-encore-bundle": "^2.1",
         "symfony/yaml": "6.4.*"
     },
     "config": {
@@ -91,6 +93,8 @@
         "doctrine/doctrine-fixtures-bundle": "^3.5",
         "pestphp/pest": "^2.28",
         "symfony/maker-bundle": "^1.52",
-        "symfony/var-dumper": "6.4.*"
+        "symfony/stopwatch": "6.4.*",
+        "symfony/var-dumper": "6.4.*",
+        "symfony/web-profiler-bundle": "6.4.*"
     }
 }

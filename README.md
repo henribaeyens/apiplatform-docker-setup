@@ -1,3 +1,7 @@
+# About
+
+This is really a barebones installation for an api-platform project (with Symfony 6.4) for both reference and experimentation.  
+
 # Prerequisite
 
 You'll need to clone and setup the development-kit package to set up your development environnement.
@@ -8,11 +12,6 @@ cd development-kit
 bin/setup
 ```
 Refer to the README for more info on how to use this kit.
-
-# About
-
-This is really a barebones installation for an api-platform project (with Symfony 6.4) for both reference and experimentation.  
-The only things I've added so far are the mailer service and a very simple message handler.   
 
 # Services
 

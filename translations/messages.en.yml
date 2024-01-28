@@ -1,0 +1,62 @@
+security:
+  login:
+    authentication: Authenticate to Access this Section
+    remember_me: Remember me
+    forgotten_password: forgotten password
+    sign_in: Log in
+  logout: Log out
+form:
+  choices:
+    roles:
+      user: User
+      admin: Admin
+  label:
+    email: Email
+    password: Password
+    resetpassword: Reset
+    newpassword: Your new password
+    repeatpassword: Confirm password
+    firstname: Firstname
+    lastname: Lastname
+    verified: Verified
+    role: Role
+  error:
+    passwords_do_not_match: Passwords do not match
+    enter_password: Enter a password
+  please_choose_one: Choose...
+  buttons:
+    download_the_coupon: Download the coupon
+    reserve_in_store: Reserve in store
+    reserve: Reserve
+action:
+  add_new_item: Add a new element
+misc:
+  and: and
+  hello: Hello
+  is: est
+list:
+  reserved: Qty reserved
+  picked_up: Qty picked up
+  available: Qty avail.
+  quantity: Qty
+  filter_by:
+    store: Filter by store
+admin:
+  breadcrumb:
+    products_to_sell: Products to sell
+    products_to_give: Products to give
+  nav:
+    users: Users
+  tab:
+    user: User
+    social_networks: Social Networks
+  action:
+    import: Import
+invalid_token: Invalid token
+reset_your_password: You can reset your password by accessing
+password_reset: Change your password
+password_reset_confirmation: Your password has been changed
+error:
+  access_denied: Access denied
+  not_found: Product not found
+  email_already_used: This email address is already used.

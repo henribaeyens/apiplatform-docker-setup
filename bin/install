@@ -15,5 +15,3 @@ cmd bin/console doctrine:migrations:sync-metadata-storage --env test --no-intera
 cmd bin/console doctrine:fixtures:load --env test --no-interaction
 cmd bin/console lexik:jwt:generate-keypair --skip-if-exists --no-interaction
 
-cmd npm install
-
