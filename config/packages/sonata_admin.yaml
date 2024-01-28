@@ -2,31 +2,13 @@ sonata_admin:
     security:
       handler: sonata.admin.security.handler.role
       role_admin: ROLE_ADMIN
-      #role_super_admin: ROLE_SUPER_ADMIN
 
     title: 'API Admin'
-#     #title_logo: /images/circlely_Logo-scaled.jpg
     
     search : false
 
     options:
       list_action_button_content: icon
-
-#     dashboard:
-#         blocks:
-#             -
-#                 position: left
-#                 type: sonata.admin.block.admin_list
-
-#         groups:
-#             admin.nav.users:
-#                 #roles: [ ROLE_ADMIN ]
-#                 on_top: true
-#                 #icon: 'fas fa-user'
-#                 label_catalogue: messages
-#                 label: admin.nav.users
-#                 items:
-#                     - app.admin.users
                     
     templates:
         user_block: 'Admin/Sonata/Core/user_block.html.twig'
