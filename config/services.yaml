@@ -4,7 +4,8 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
-
+    api_prefix: '%env(resolve:API_VERSION)%'
+    locale: 'en'
 services:
     # default configuration for services in *this* file
     _defaults:
@@ -20,9 +21,36 @@ services:
             - '../src/Entity/'
             - '../src/Kernel.php'
 
-    # add more service definitions when explicit configuration is needed
-    # please note that last definitions always *replace* previous ones
-
     App\State\UserPasswordHasher:
         bind:
             $processor: '@api_platform.doctrine.orm.state.persist_processor'
+
+    App\Controller\Security\LoginController:
+        public: true
+        arguments:
+            -
+                '@twig'
+                '@router'
+                '@security.authentication_utils'
+                '@sonata.admin.pool'
+                '@security.token_storage'
+                '@translator'
+                '@?security.csrf.token_manager'
+        tags: ['controller.service_arguments']
+
+    App\Filter\JsonListFilter:
+        tags:
+            - { name: sonata.admin.filter.type }
+
+    app.admin.users:
+        class: App\Admin\Controller\UserController
+        tags:
+            -
+                name: sonata.admin
+                model_class: App\Entity\User
+                manager_type: orm
+                label_catalogue: messages
+                label: admin.nav.users
+        calls: 
+            - ['setPasswordHasher', ['@security.user_password_hasher']]
+

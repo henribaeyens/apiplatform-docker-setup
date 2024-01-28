@@ -63,8 +63,8 @@ it('authenticates a user', function () {
         [
             'body' => json_encode($payload),
             'headers' => [
-                'accept' => ['application/ld+json'],
-                'CONTENT_TYPE' => 'application/ld+json',
+                'accept' => ['application/json'],
+                'CONTENT_TYPE' => 'application/json',
             ]
         ]
     );
@@ -89,8 +89,8 @@ it('authenticates (should succeed) and get a list of all users (should succeed i
         [
             'body' => json_encode($payload),
             'headers' => [
-                'accept' => ['application/ld+json'],
-                'CONTENT_TYPE' => 'application/ld+json',
+                'accept' => ['application/json'],
+                'CONTENT_TYPE' => 'application/json',
             ]
         ]
     );
@@ -104,7 +104,7 @@ it('authenticates (should succeed) and get a list of all users (should succeed i
 
     $client->request(
         'GET', 
-        '/api/users',
+        '/' . $this->apiVersion . '/users',
         [
             'headers' => [
                 'accept' => ['application/ld+json'],
@@ -129,7 +129,7 @@ it('creates a user', function () {
         ['base_uri' => 'https://api.docker.localhost']
     )->request(
         'POST', 
-        '/api/users',
+        '/' . $this->apiVersion . '/users',
         [
             'body' => json_encode($payload),
             'headers' => [

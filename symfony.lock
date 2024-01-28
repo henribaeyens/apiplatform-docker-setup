@@ -52,6 +52,9 @@
             "./migrations/.gitignore"
         ]
     },
+    "knplabs/knp-menu-bundle": {
+        "version": "v3.3.0"
+    },
     "lexik/jwt-authentication-bundle": {
         "version": "2.20",
         "recipe": {
@@ -89,6 +92,63 @@
             "./phpunit.xml.dist",
             "./tests/bootstrap.php"
         ]
+    },
+    "sonata-project/admin-bundle": {
+        "version": "4.29",
+        "recipe": {
+            "repo": "github.com/symfony/recipes-contrib",
+            "branch": "main",
+            "version": "4.0",
+            "ref": "0e5931df1732e3dccfba42a20853049e5e9db6ae"
+        }
+    },
+    "sonata-project/block-bundle": {
+        "version": "5.1",
+        "recipe": {
+            "repo": "github.com/symfony/recipes-contrib",
+            "branch": "main",
+            "version": "4.11",
+            "ref": "b4edd2a1e6ac1827202f336cac2771cb529de542"
+        }
+    },
+    "sonata-project/doctrine-extensions": {
+        "version": "2.3",
+        "recipe": {
+            "repo": "github.com/symfony/recipes-contrib",
+            "branch": "main",
+            "version": "1.8",
+            "ref": "4ea4a4b6730f83239608d7d4c849533645c70169"
+        }
+    },
+    "sonata-project/doctrine-orm-admin-bundle": {
+        "version": "4.15.0"
+    },
+    "sonata-project/exporter": {
+        "version": "3.3",
+        "recipe": {
+            "repo": "github.com/symfony/recipes-contrib",
+            "branch": "main",
+            "version": "2.4",
+            "ref": "93d6df022ef1dc24bdfa8667ddd560bbde89a7cc"
+        }
+    },
+    "sonata-project/form-extensions": {
+        "version": "2.3",
+        "recipe": {
+            "repo": "github.com/symfony/recipes-contrib",
+            "branch": "main",
+            "version": "1.4",
+            "ref": "9c8a1e8ce2b1f215015ed16652c4ed18eb5867fd"
+        }
+    },
+    "sonata-project/twig-extensions": {
+        "version": "2.4",
+        "recipe": {
+            "repo": "github.com/symfony/recipes-contrib",
+            "branch": "main",
+            "version": "1.2",
+            "ref": "30dba2f9b719f21b497a6302f41aac07f9079e13"
+        }
     },
     "symfony/console": {
         "version": "6.4",
@@ -192,18 +252,17 @@
             "./config/routes/security.yaml"
         ]
     },
-    "symfony/stimulus-bundle": {
-        "version": "2.13",
+    "symfony/translation": {
+        "version": "6.4",
         "recipe": {
             "repo": "github.com/symfony/recipes",
             "branch": "main",
-            "version": "2.9",
-            "ref": "05c45071c7ecacc1e48f94bc43c1f8d4405fb2b2"
+            "version": "6.3",
+            "ref": "e28e27f53663cc34f0be2837aba18e3a1bef8e7b"
         },
         "files": [
-            "assets/bootstrap.js",
-            "assets/controllers.json",
-            "assets/controllers/hello_controller.js"
+            "config/packages/translation.yaml",
+            "translations/.gitignore"
         ]
     },
     "symfony/twig-bundle": {
@@ -219,18 +278,6 @@
             "./templates/base.html.twig"
         ]
     },
-    "symfony/ux-react": {
-        "version": "2.13",
-        "recipe": {
-            "repo": "github.com/symfony/recipes",
-            "branch": "main",
-            "version": "2.9",
-            "ref": "e970076b31d602ae6e2106cf91a82c7e1f7ddff2"
-        },
-        "files": [
-            "assets/react/controllers/Hello.jsx"
-        ]
-    },
     "symfony/validator": {
         "version": "6.4",
         "recipe": {
@@ -243,20 +290,17 @@
             "./config/packages/validator.yaml"
         ]
     },
-    "symfony/webpack-encore-bundle": {
-        "version": "2.1",
+    "symfony/web-profiler-bundle": {
+        "version": "6.4",
         "recipe": {
             "repo": "github.com/symfony/recipes",
             "branch": "main",
-            "version": "2.0",
-            "ref": "082d754b3bd54b3fc669f278f1eea955cfd23cf5"
+            "version": "6.1",
+            "ref": "e42b3f0177df239add25373083a564e5ead4e13a"
         },
         "files": [
-            "assets/app.js",
-            "assets/styles/app.css",
-            "config/packages/webpack_encore.yaml",
-            "package.json",
-            "webpack.config.js"
+            "config/packages/web_profiler.yaml",
+            "config/routes/web_profiler.yaml"
         ]
     }
 }

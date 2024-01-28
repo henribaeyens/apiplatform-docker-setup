@@ -22,7 +22,7 @@ services:
             # You may use a bind-mounted host directory instead, so that it is harder to accidentally remove the volume and lose all your data!
             # - ./docker/db/data:/var/lib/mysql/data:rw
         healthcheck:
-          test: ["CMD-SHELL", "exit | mysql -u${DATABASE_USER} -p${DATABASE_USER}" ]
+          test: ["CMD-SHELL", "exit | mysql -u${DATABASE_USER} -p${DATABASE_PASSWORD}" ]
           interval: 10s
           timeout: 5s
           retries: 5
