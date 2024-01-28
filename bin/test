@@ -5,4 +5,4 @@ DIR=$(dirname "$(realpath "$BASH_SOURCE")")
 source "$DIR/.common"
 cd "$DIR/.."
 
-cmd docker-compose run --rm srvc_php ./vendor/bin/pest 
+cmd docker-compose run --rm srvc_php vendor/bin/pest 
