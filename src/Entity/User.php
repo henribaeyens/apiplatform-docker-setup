@@ -92,6 +92,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: Types::BOOLEAN, options: ['default' => false])]
     private bool $verified = false;
 
+    #[ORM\Column(type: Types::STRING, length: 255, nullable: true)]
+    private ?string $recoveryToken = null;
+
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    private ?\DateTimeInterface $recoveryRequestDate = null;
+
     use Timestampable;
 
     public function getId(): ?int
@@ -222,5 +228,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->verified = $verified;
 
         return $this;
+    }
+
+    public function getRecoveryToken(): ?string
+    {
+        return $this->recoveryToken;
+    }
+
+    public function setRecoveryToken(?string $recoveryToken): static
+    {
+        $this->recoveryToken = $recoveryToken;
+
+        return $this;
+    }
+
+    public function getRecoveryRequestDate(): ?\DateTimeInterface
+    {
+        return $this->recoveryRequestDate;
+    }
+
+    public function setRecoveryRequestDate(?\DateTimeInterface $recoveryRequestDate): static
+    {
+        $this->recoveryRequestDate = $recoveryRequestDate;
+
+        return $this;
+    }
+
+    public function isRecoveryRequestExpired(int $ttl): bool
+    {
+        $passwordRequestedAt = $this->getRecoveryRequestDate();
+
+        return null !== $passwordRequestedAt && $passwordRequestedAt->getTimestamp() + $ttl > time();
     }
 }
