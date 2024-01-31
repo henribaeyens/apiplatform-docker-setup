@@ -13,6 +13,7 @@
 {% block body_attributes %}class="sonata-bc login-page {% if _use_icheck %}sonata-icheck{% endif %}"{% endblock %}
 
 {% block sonata_wrapper %}
+    {% include '@SonataTwig/FlashMessage/render.html.twig' %}
     <div class="login-box">
         {% block login_box_header %}
             <div class="login-logo">
@@ -37,7 +38,7 @@
                         </div>
                     {% endif %}
                 {% endblock %}
-                <p class="login-box-msg">{{ 'security.login.authentication'|trans }}</p>
+                <p class="login-box-msg">{{ 'security.login.title'|trans }}</p>
 
                 <form action="{{ path("admin_login") }}" method="post" role="form">
                     <input type="hidden" name="_csrf_token" value="{{ csrf_token }}"/>

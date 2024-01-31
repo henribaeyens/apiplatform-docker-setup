@@ -10,16 +10,16 @@ use Doctrine\ORM\Mapping\PreUpdate;
 trait Timestampable
 {
     /**
-     * @var \DateTime
+     * @var \DateTimeInterface
      */
     #[Column(name: 'created_at', type: Types::DATETIME_MUTABLE, nullable: true)]
-    private ?\DateTime $createdAt;
+    private ?\DateTimeInterface $createdAt;
 
     /**
-     * @var \DateTime
+     * @var \DateTimeInterface
      */
     #[Column(name: 'updated_at', type: Types::DATETIME_MUTABLE, nullable: true)]
-    private ?\DateTime $updatedAt;
+    private ?\DateTimeInterface $updatedAt;
 
     #[PrePersist]
     public function onPrePersist()
@@ -37,9 +37,9 @@ trait Timestampable
     /**
      * Set createdAt
      *
-     * @param \DateTime $createdAt
+     * @param \DateTimeInterface $createdAt
      */
-    public function setCreatedAt($createdAt)
+    public function setCreatedAt(\DateTimeInterface $createdAt): static
     {
         $this->createdAt = $createdAt;
 
@@ -49,9 +49,9 @@ trait Timestampable
     /**
      * Get createdAt
      *
-     * @return \DateTime
+     * @return \DateTimeInterface
      */
-    public function getCreatedAt()
+    public function getCreatedAt(): ?\DateTimeInterface
     {
         return $this->createdAt;
     }
@@ -59,9 +59,9 @@ trait Timestampable
     /**
      * Set updatedAt
      *
-     * @param \DateTime $updatedAt
+     * @param \DateTimeInterface $updatedAt
      */
-    public function setUpdatedAt($updatedAt)
+    public function setUpdatedAt(\DateTimeInterface $updatedAt): static
     {
         $this->updatedAt = $updatedAt;
 
@@ -71,9 +71,9 @@ trait Timestampable
     /**
      * Get updatedAt
      *
-     * @return \DateTime
+     * @return \DateTimeInterface
      */
-    public function getUpdatedAt()
+    public function getUpdatedAt(): \DateTimeInterface
     {
         return $this->updatedAt;
     }

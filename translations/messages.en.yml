@@ -1,10 +1,32 @@
 security:
   login:
-    authentication: Authenticate to Access this Section
+    title: Authenticate to Access this Area
+    back_to_authentication: Back to login page
     remember_me: Remember me
-    forgotten_password: forgotten password
+    forgotten_password: I have forgotten my password
     sign_in: Log in
   logout: Log out
+  password_reset:
+    request:
+      title: Request a Password Reset
+      email: Enter your email
+      submit: Send
+      subject: Your Password Reset Request
+      greetings: Hello %user%
+      message: <p>To reset your password - please visit <a style="color:#1F7850;" href="%confirmationUrl%">%confirmationUrl%</a>&nbsp;</p>
+      check_email:  "An email has been sent. It contains a link you must click to reset your password.
+          Note: You can only request a new password once within %tokenLifetime% hours.
+
+          If you don't get an email check your spam folder or try again."
+    reset:
+      title: Reset Your Password
+      submit: Reset
+flash:
+  error:
+    no_such_user: User does not exist
+    token_has_expired: Reset token has expired
+  success:
+    password_reset: Your password has been reset
 form:
   choices:
     roles:
@@ -14,8 +36,8 @@ form:
     email: Email
     password: Password
     resetpassword: Reset
-    newpassword: Your new password
-    repeatpassword: Confirm password
+    new_password: Your new password
+    password_confirmation: Confirm password
     firstname: Firstname
     lastname: Lastname
     verified: Verified
@@ -34,29 +56,11 @@ misc:
   and: and
   hello: Hello
   is: est
-list:
-  reserved: Qty reserved
-  picked_up: Qty picked up
-  available: Qty avail.
-  quantity: Qty
-  filter_by:
-    store: Filter by store
 admin:
-  breadcrumb:
-    products_to_sell: Products to sell
-    products_to_give: Products to give
   nav:
     users: Users
   tab:
     user: User
-    social_networks: Social Networks
-  action:
-    import: Import
-invalid_token: Invalid token
-reset_your_password: You can reset your password by accessing
-password_reset: Change your password
-password_reset_confirmation: Your password has been changed
 error:
   access_denied: Access denied
-  not_found: Product not found
   email_already_used: This email address is already used.

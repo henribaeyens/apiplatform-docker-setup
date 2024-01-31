@@ -1,6 +1,6 @@
 # About
 
-This is really a barebones installation for an api-platform project (with Symfony 6.4) for both reference and experimentation.  
+Barebones installation for an api-platform project (Symfony 6.4 and API platform 3.2) for both reference and experimentation.  
 
 # Prerequisite
 
@@ -52,7 +52,16 @@ bin/build
 - create the test database if it does not exist
 - run the migrations for both the **test** and **dev** environments
 - generate the jwt keys if they do not exist
-- install npm packages necessary to run the React admin
+
+# Administration
+
+SonataAdmin is installed.  
+An admin user can be created using the following command:
+```
+bin/bash # connects to the php container
+bin/console app:user:create
+```
+Log in at https://api.docker.localhost/admin/login  
 
 # Testing
 
@@ -62,7 +71,7 @@ A few very basic tests have been implemented.
 Run the tests with the following command:
 ```
 bin/bash # connects to the php container
-./vendor/bin/pest
+vendor/bin/pest
 ```
 or
 ```
