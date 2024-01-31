@@ -64,6 +64,9 @@ security:
         - { path: ^/authentication, role: PUBLIC_ACCESS }
         - { path: ^/admin/login$, role: PUBLIC_ACCESS }
         - { path: ^/admin/logout$, role: PUBLIC_ACCESS }
+        - { path: ^/admin/password_request$, role: PUBLIC_ACCESS }
+        - { path: ^/admin/check_email, role: PUBLIC_ACCESS }
+        - { path: ^/admin/password_reset, role: PUBLIC_ACCESS }
         - { path: ^/admin/, role: ROLE_ADMIN }
 
     role_hierarchy:

@@ -11,7 +11,12 @@ sonata_admin:
       list_action_button_content: icon
                     
     templates:
-        user_block: 'Admin/Sonata/Core/user_block.html.twig'
+      user_block: 'Admin/Sonata/Core/user_block.html.twig'
+
+    assets:
+      extra_stylesheets:
+        - bundles/sonatatwig/css/flashmessage.css
+
 
 sonata_block:
     blocks:
