@@ -12,8 +12,16 @@ beforeEach(function () {
 });
 
 it('sends an email', function () {
-    $mailerInterface = self::getContainer()->get('Symfony\Component\Mailer\MailerInterface');
-    $mailer = new Mailer($mailerInterface);
+    $mailerInterface = self::getContainer()->get('mailer.mailer');
+    $urlGenerator = self::getContainer()->get('router');
+    $twig = self::getContainer()->get('twig');
+    $translator = self::getContainer()->get('translator.data_collector');
+    $mailer = new Mailer(
+        $mailerInterface,
+        $urlGenerator,
+        $twig,
+        $translator
+    );
     $response = $mailer->send();
     expect($response)->toBeTrue();
 });
