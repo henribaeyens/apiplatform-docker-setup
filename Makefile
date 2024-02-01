@@ -3,7 +3,7 @@
 # --------------------------------#
 
 # ----- Colors -----
-GREEN = /bin/echo -e "\x1b[32m\#\# $1\x1b[0m"
+GREEN = /bin/echo -e "\032[0;32m\#\# $1\033[0m"
 RED = /bin/echo -e "\x1b[31m\#\# $1\x1b[0m"
 
 # ----- Programs -----
@@ -11,7 +11,7 @@ COMPOSER = composer
 SYMFONY = symfony
 CONSOLE = bin/console
 BUILD = bin/build
-TEST = /vendor/bin/pest
+TEST = bin/test
 
 init:
 	$(MAKE) build
@@ -20,4 +20,9 @@ init:
 build:
 	@$(call GREEN, "Building and initializing project")
 	$(BUILD)
+
+test:
+	@$(call GREEN, "Running tests")
+	$(TEST)
+
 
