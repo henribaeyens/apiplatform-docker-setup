@@ -6,10 +6,10 @@ _echo() {
 	shift
 
 	if [ "$1" = "-n" ]; then
-	  shift
-	  printf "%b" "$color$*\033[0m"
-  else
-	    printf "%b\n" "$color$*\033[0m"
+	  	shift
+	  	printf "%b" "$color$*\033[0m"
+  	else
+		printf "%b\n" "$color$*\033[0m"
 	fi
 
 }
