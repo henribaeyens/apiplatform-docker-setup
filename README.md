@@ -42,7 +42,7 @@ Check that the files in the bin directory are executable.
 Build the project using the following:
 
 ```
-bin/build
+make init
 ```
 
 ## What the build does
@@ -52,6 +52,11 @@ bin/build
 - create the test database if it does not exist
 - run the migrations for both the **test** and **dev** environments
 - generate the jwt keys if they do not exist
+
+## Rebuilding the project
+```
+make rebuild
+```
 
 # Administration
 
@@ -69,13 +74,13 @@ Tests are done using pest. Read about the pest testing framework at https://pest
 A few very basic tests have been implemented.  
 
 Run the tests with the following command:
+### From the local shell
 ```
-bin/bash # connects to the php container
-vendor/bin/pest
+make local-test
 ```
-or
+### From the php container's shell
 ```
-bin/test
+make test
 ```
 
 ### Test 1

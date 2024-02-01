@@ -2,16 +2,15 @@
 # Makefile for the "make" command
 # --------------------------------#
 
-# ----- Colors -----
-GREEN = /bin/echo -e "\032[0;32m\#\# $1\033[0m"
-RED = /bin/echo -e "\x1b[31m\#\# $1\x1b[0m"
+GREEN = /bin/echo -e "\e[32m\# $1\e[0m"
+RED = /bin/echo -e "\e[31m\# $1\e[0m"
 
-# ----- Programs -----
 COMPOSER = composer
 SYMFONY = symfony
 CONSOLE = bin/console
 BUILD = bin/build
-TEST = bin/test
+TEST = vendor/bin/pest
+LOCAL_TEST = bin/test
 
 init:
 	$(MAKE) build
@@ -21,8 +20,15 @@ build:
 	@$(call GREEN, "Building and initializing project")
 	$(BUILD)
 
+rebuild:
+	bin/stop
+	bin/clean
+	$(BUILD)
+
 test:
 	@$(call GREEN, "Running tests")
 	$(TEST)
 
-
+local-test:
+	@$(call GREEN, "Running tests from  local shell")
+	$(LOCAL_TEST)
