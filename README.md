@@ -102,3 +102,16 @@ An authentication succeeds
 ### Test 5
 An authentication succeeds but a request to get users fail (throws an access denied exception). A user who does not have the admin role cannot request other users.
 
+# Doctrine migrations
+Migrations are performed at build time. The following command can be invoked after the generation of new migrations:
+```
+make migrate
+```
+from the local shell.  
+
+# Loading fixtures
+Fixtures are loaded at build time. They can be reloaded with:
+```
+make load-fixtures
+```
+from the local shell.
