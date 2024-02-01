@@ -10,8 +10,6 @@ COMPOSE = docker-compose
 SYMFONY = symfony
 CONSOLE = bin/console
 BUILD = bin/build
-TEST = vendor/bin/pest
-LOCAL_TEST = bin/test
 
 init:
 	$(MAKE) build
@@ -25,10 +23,10 @@ rebuild:
 	$(BUILD)
 
 test:
-	$(TEST)
+	vendor/bin/pest
 
 local-test:
-	$(LOCAL_TEST)
+	bin/test
 
 migrate:
 	bin/migrate
