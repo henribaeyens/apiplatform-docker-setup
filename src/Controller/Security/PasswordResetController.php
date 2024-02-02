@@ -13,16 +13,18 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use Symfony\Component\HttpKernel\Attribute\AsController;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
+#[AsController]
 final class PasswordResetController extends AbstractController
 {
     public function __construct(
-        private Pool $adminPool,
-        private UserRepository $userRepository,
-        private UserPasswordHasherInterface $userPasswordHasher,
-        private TranslatorInterface $translator,
+        private readonly Pool $adminPool,
+        private readonly UserRepository $userRepository,
+        private readonly UserPasswordHasherInterface $userPasswordHasher,
+        private readonly TranslatorInterface $translator,
         private readonly int $ttl,
     ) {
     }

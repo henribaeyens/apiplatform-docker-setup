@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
 use App\Entity\Trait\Timestampable;
@@ -30,7 +32,7 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
         new Post(
             security: "is_granted('ROLE_ADMIN')",
             processor: UserPasswordHasher::class,
-            validationContext: ['groups' => ['Default', 'user:create']]
+            validationContext: ['groups' => ['user:create']]
         ),
         new Get(
             security: "is_granted('ROLE_ADMIN') or object.owner == user",
@@ -97,6 +99,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $recoveryRequestDate = null;
+
+    #[ORM\Column(length: 6, nullable: true)]
+    #[Groups(['user:read'])]
+    private ?string $emailVerificationCode = null;
 
     use Timestampable;
 
@@ -214,6 +220,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setLastName(string $lastName): static
     {
         $this->lastName = $lastName;
+
+        return $this;
+    }
+
+    public function getEmailVerificationCode(): ?string
+    {
+        return $this->emailVerificationCode;
+    }
+
+    public function setEmailVerificationCode(?string $emailVerificationCode): static
+    {
+        $this->emailVerificationCode = $emailVerificationCode;
 
         return $this;
     }

@@ -1,0 +1,16 @@
+{% block body_text %}
+{% autoescape false %}
+<table>
+    <tr>
+        <td style="padding: 40px 40px 20px; text-align: left; font-family: sans-serif; font-size: 15px; mso-height-rule: exactly; line-height: 20px; color: #555555;">
+            {{ 'security.password_reset.request.greetings'|trans({'%user%': user.firstname}) }}
+        </td>
+    </tr>
+        <tr>
+            <td style="padding: 40px 40px 20px; text-align: left; font-family: sans-serif; font-size: 15px; mso-height-rule: exactly; line-height: 20px; color: #555555;">
+                {{ 'registration.email_verification.message'|trans({'%code%': user.emailVerificationCode}) }}
+            </td>
+        </tr>            
+</table>
+{% endautoescape %}
+{% endblock %}

@@ -10,17 +10,19 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\HttpKernel\Attribute\AsController;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
+#[AsController]
 final class LoginController extends AbstractController
 {
     public function __construct(
-        private AuthenticationUtils $authenticationUtils,
-        private Pool $adminPool,
-        private TranslatorInterface $translator,
-        private ?CsrfTokenManagerInterface $csrfTokenManager = null
+        private readonly AuthenticationUtils $authenticationUtils,
+        private readonly Pool $adminPool,
+        private readonly TranslatorInterface $translator,
+        private readonly ?CsrfTokenManagerInterface $csrfTokenManager = null
     ) {
     }
 
