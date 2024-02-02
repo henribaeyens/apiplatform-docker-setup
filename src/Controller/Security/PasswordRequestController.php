@@ -14,17 +14,19 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\HttpKernel\Attribute\AsController;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Security\Csrf\TokenGenerator\TokenGeneratorInterface;
 
+#[AsController]
 final class PasswordRequestController extends AbstractController
 {
     public function __construct(
-        private Pool $adminPool,
-        private Mailer $mailer,
-        private TokenGeneratorInterface $tokenGenerator,
-        private UserRepository $userRepository,
-        private TranslatorInterface $translator,
+        private readonly Pool $adminPool,
+        private readonly Mailer $mailer,
+        private readonly TokenGeneratorInterface $tokenGenerator,
+        private readonly UserRepository $userRepository,
+        private readonly TranslatorInterface $translator,
         private readonly int $ttl,
     ) {
     }

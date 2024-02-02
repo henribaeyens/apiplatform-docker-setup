@@ -9,12 +9,14 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpKernel\Attribute\AsController;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
+#[AsController]
 final class CheckEmailController extends AbstractController
 {
     public function __construct(
-        private Pool $adminPool,
+        private readonly Pool $adminPool,
         private readonly int $ttl,
     ) {
     }

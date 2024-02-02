@@ -25,7 +25,7 @@ rebuild:
 test:
 	vendor/bin/pest
 
-local-test:
+host-test:
 	bin/test
 
 migrate:
