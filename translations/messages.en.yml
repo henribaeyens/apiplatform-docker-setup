@@ -24,6 +24,7 @@ flash:
   error:
     no_such_user: User does not exist
     token_has_expired: Reset token has expired
+    user_already_authenticated: Already authenticated
   success:
     password_reset: Your password has been reset
 form:
