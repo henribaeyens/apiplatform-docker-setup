@@ -6,6 +6,8 @@ namespace App\Controller;
 
 use App\Service\Mailer;
 use App\Repository\UserRepository;
+use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -19,18 +21,22 @@ final class EmailVerificationController extends AbstractController
     public function __construct(
         private readonly UserRepository $userRepository,
         private readonly Mailer $mailer,
+        private readonly Security $security
     ) {
     }
 
     #[Route('/email_verification', name: 'email_verification', methods: ['POST'])]
-    public function __invoke(Request $request): Response
+    public function __invoke(Request $request): JsonResponse
     {
         $data = json_decode($request->getContent(), true);
 
         /** @var UserInterface $user */
         $user = $this->userRepository->findOneByEmailVerificationCode($data['emailVerificationCode']);
         if (null === $user) {
-            return new Response('no match', Response::HTTP_BAD_REQUEST);
+            return new JsonResponse([
+                'code' => Response::HTTP_BAD_REQUEST,
+                'message' => 'no match found'
+            ], Response::HTTP_BAD_REQUEST);
         }
         $user->setVerified(true);
         $user->setEmailVerificationCode(null);
@@ -38,6 +44,14 @@ final class EmailVerificationController extends AbstractController
         $this->mailer->sendUserVerifiedNotification($user);
         $this->mailer->sendUserVWelcomeMessage($user);
 
-        return new Response('user verified', Response::HTTP_OK);
+        $auth = $this->security->login($user, 'json_login', 'auth');
+        return new JsonResponse(
+            $auth->getContent(),
+            Response::HTTP_OK,
+            [
+                'content-type' => 'application/json'
+            ],
+            true
+        );
     }
 }

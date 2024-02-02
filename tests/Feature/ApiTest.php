@@ -128,11 +128,17 @@ it('authenticates (should succeed) and get a list of all users (should succeed i
     );
 });
 
-it('registers a user and verifies it', function () {
+it('registers a user, verifies it, and returns an authentication token', function () {
+    $faker = Faker\Factory::create();
+
+    $email = $faker->email();
+    $firstName = $faker->firstName();
+    $lastName = $faker->lastName();
+
     $payload = [
-        'email' => 'henri@somecompany.com',
-        'firstName' => 'Henry',
-        'lastName' => 'Baeyens',
+        'email' => $email,
+        'firstName' => $firstName,
+        'lastName' => $lastName,
         'password' => 'itsnosecret',
     ];
 
@@ -181,6 +187,6 @@ it('registers a user and verifies it', function () {
     );
 
     expect($response->getStatusCode())->toBe(Response::HTTP_OK);
-
+    expect($response->toArray())->toHaveKey('token');
 });
 
