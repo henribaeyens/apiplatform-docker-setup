@@ -1,20 +1,21 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Command\User;
 
-use App\Entity\User;
 use App\Enum\UserRole;
 use App\Repository\UserRepository;
-use Doctrine\ORM\EntityManagerInterface;
+use App\Factory\UserFactoryInterface;
+use function Symfony\Component\String\u;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Console\Exception\InvalidArgumentException;
-use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
-use function Symfony\Component\String\u;
 
 /**
  * User creation command.
@@ -38,9 +39,8 @@ class CreateUserCommand extends Command
     private SymfonyStyle $io;
 
     public function __construct(
-        private readonly EntityManagerInterface $entityManager,
-        private readonly UserPasswordHasherInterface $passwordHasher,
-        private readonly UserRepository $users
+        private readonly UserFactoryInterface $userFactory,
+        private readonly UserRepository $userRepository,
     ) {
         parent::__construct();
     }
@@ -123,26 +123,23 @@ class CreateUserCommand extends Command
         /** @var string $isAdmin */
         $isAdmin = $input->getArgument(self::ARG_IS_ADMIN);
 
-        // check if a user with the same email already exists.
-        $userExists = $this->users->findOneBy(['email' => $email]);
-
-        if (null !== $userExists) {
-            throw new \RuntimeException(sprintf('There is already a user registered with the "%s" email.', $email));
+        /** @var UserInterface $user */
+        try {
+            $user = $this->userFactory->create(
+                firstName: $firstname,
+                lastName: $lastname,
+                email: $email,
+                plainPassword: $plainPassword,
+                roles: ['Yes'=== $isAdmin ? UserRole::ADMIN->value : UserRole::USER->value],
+                verified: 'Yes'=== $isAdmin
+            );
+        } catch (\RuntimeException $e) {
+            $this->io->error(
+                $e->getMessage()
+            );
+            return Command::FAILURE;
         }
-        
-        // create the user
-        $user = new User();
-        $user->setEmail($email);
-        $user->setFirstName($firstname);
-        $user->setLastName($lastname);
-        $user->setRoles(['Yes'=== $isAdmin ? UserRole::ADMIN->value : UserRole::USER->value]);
-        $user->setVerified(true);
-
-        $hashedPassword = $this->passwordHasher->hashPassword($user, $plainPassword);
-        $user->setPassword($hashedPassword);
-
-        $this->entityManager->persist($user);
-        $this->entityManager->flush();
+        $this->userRepository->save($user);
 
         $this->io->success(
             sprintf(

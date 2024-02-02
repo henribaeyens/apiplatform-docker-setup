@@ -68,25 +68,27 @@ bin/console app:user:create
 ```
 Log in at https://api.docker.localhost/admin/login  
 
+
 # Testing
 
-Tests are done using pest. Read about the pest testing framework at https://pestphp.com/docs/  
+Tests are done using pest. The Pest documentation is at https://pestphp.com/docs/  
 A few very basic tests have been implemented.  
 
 Run the tests with the following command:
-### From the local shell
+### From the host shell
 ```
-make local-test
+make host-test
 ```
 ### From the php container's shell
 ```
 make test
 ```
 
-### Test 1
+### Unit tests
+#### Test 1
 Send an email.   
 You can navigate to https://mail.api.docker.localhost to check that the email is in the mailbox
-### Test 2
+#### Test 2
 Dispatch a message to the RabbitMQ broker.   
 You can check the RabbitMQ management interface at https://rmq.api.docker.localhost to see if it is there.   
 Invoke the following command to consume the message:
@@ -94,24 +96,40 @@ Invoke the following command to consume the message:
 bin/bash # access the php container
 bin/console messenger:consume -vv
 ```
-There should be three messages queued: the message sent with test 2 and one for each user created with the fixtures loaded during the build process.
+### API tests
+### Test 1
+An authentification attempt fails (wrong credentials).
+### Test 2
+An authentification attempt fails (non-verified user).
 ### Test 3
-An authentification attempt fails.
+An authentication succeeds with a verified user
 ### Test 4
-An authentication succeeds
+An authentication succeeds but a request to get users fail (throws an access denied exception).  
+A user who does not have the admin role cannot request other users.
 ### Test 5
-An authentication succeeds but a request to get users fail (throws an access denied exception). A user who does not have the admin role cannot request other users.
+A user registers and is verified.   
+This is a two-step process: upon successful registration, the user is sent a verification code via email. The code is then POSTed to the API to verify the user.   
+This would typically be done via an interface (React or whatever)
 
 # Doctrine migrations
 Migrations are performed at build time. The following command can be invoked after the generation of new migrations:
 ```
 make migrate
 ```
-from the local shell.  
 
 # Loading fixtures
 Fixtures are loaded at build time. They can be reloaded with:
 ```
 make load-fixtures
 ```
-from the local shell.
+
+# The Makefile
+All make commands (expect the ones related to testing) are meant to be be run from the host shell.  
+- init (alias for build)
+- build
+- rebuild
+- test (to run form the php container shell)
+- host-test (to run from the host shell)
+- migrate
+- load-fixtures
+

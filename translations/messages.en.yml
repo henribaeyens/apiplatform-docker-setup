@@ -11,7 +11,6 @@ security:
       title: Request a Password Reset
       email: Enter your email
       submit: Send
-      subject: Your Password Reset Request
       greetings: Hello %user%
       message: <p>To reset your password - please visit <a style="color:#1F7850;" href="%confirmationUrl%">%confirmationUrl%</a>&nbsp;</p>
       check_email:  "An email has been sent. It contains a link you must click to reset your password.
@@ -64,3 +63,15 @@ admin:
 error:
   access_denied: Access denied
   email_already_used: This email address is already used.
+email:
+  subject:
+    email_verification: Your Email Verification Code
+    password_reset: Your Password Reset Request
+registration:
+  email_verification:
+    message: "Here is your email verification code.
+
+          %code%
+          
+          ."
+

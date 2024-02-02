@@ -1,58 +1,56 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\DataFixtures;
 
-use App\Entity\User;
 use App\Enum\UserRole;
+use App\Repository\UserRepository;
+use App\Factory\UserFactoryInterface;
 use Doctrine\Persistence\ObjectManager;
 use Doctrine\Bundle\FixturesBundle\Fixture;
-use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 class AppFixtures extends Fixture
 {
     public function __construct(
-        private readonly UserPasswordHasherInterface $passwordHasher,
+        private readonly UserFactoryInterface $userFactory,
+        private readonly UserRepository $userRepository,
     )
     {
     }
     public function load(ObjectManager $manager): void
     {
-        $user1 = new User();
-        $user1->setEmail('user1@api.local');
-        $user1->setFirstName('fname1');
-        $user1->setLastName('lname1');
-        $user1->setRoles([UserRole::USER->value]);
-        $user1->setVerified(true);
+        /** @var UserInterface $user */
+        $user = $this->userFactory->create(
+            firstName: 'fname1',
+            lastName: 'lname1',
+            email: 'user1@api.local',
+            plainPassword: 'notsosecret',
+            roles: [ UserRole::USER->value],
+            verified: true
+        );
+        $this->userRepository->save($user);
 
-        $hashedPassword = $this->passwordHasher->hashPassword($user1, 'notsosecret');
-        $user1->setPassword($hashedPassword);
+        /** @var UserInterface $user */
+        $user = $this->userFactory->create(
+            firstName: 'fname2',
+            lastName: 'lname3',
+            email: 'user2@api.local',
+            plainPassword: 'nottoosecret',
+            roles: [ UserRole::USER->value],
+        );
+        $this->userRepository->save($user);
 
-        $manager->persist($user1);
-
-        $user2 = new User();
-        $user2->setEmail('user2@api.local');
-        $user2->setFirstName('fname2');
-        $user2->setLastName('lname2');
-        $user2->setRoles([UserRole::USER->value]);
-        $user2->setVerified(false);
-
-        $hashedPassword = $this->passwordHasher->hashPassword($user2, 'nottoosecret');
-        $user2->setPassword($hashedPassword);
-
-        $manager->persist($user2);
-
-        $user3 = new User();
-        $user3->setEmail('user3@api.local');
-        $user3->setFirstName('fname3');
-        $user3->setLastName('lname3');
-        $user3->setRoles([UserRole::ADMIN->value]);
-        $user3->setVerified(true);
-
-        $hashedPassword = $this->passwordHasher->hashPassword($user3, 'notmuchofasecret');
-        $user3->setPassword($hashedPassword);
-
-        $manager->persist($user3);
-
-        $manager->flush();
+        /** @var UserInterface $user */
+        $user = $this->userFactory->create(
+            firstName: 'fname3',
+            lastName: 'lname3',
+            email: 'user3@api.local',
+            plainPassword: 'notmuchofasecret',
+            roles: [ UserRole::ADMIN->value],
+            verified: true
+        );
+        $this->userRepository->save($user);
     }
 }

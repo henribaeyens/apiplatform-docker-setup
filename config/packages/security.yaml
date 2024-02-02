@@ -54,14 +54,16 @@ security:
                 password_path: password
                 success_handler: lexik_jwt_authentication.handler.authentication_success
                 failure_handler: lexik_jwt_authentication.handler.authentication_failure
-        #     #user_checker: App\Security\UserChecker
+            user_checker: App\Security\UserChecker
             jwt: ~
 
     access_control:
         - { path: ^/%api_prefix%$, roles: PUBLIC_ACCESS }
         - { path: ^/%api_prefix%/(docs|docs.jsonld|contexts/Entrypoint), role: PUBLIC_ACCESS }
         - { path: ^/%api_prefix%/, roles: ROLE_USER }
-        - { path: ^/authentication, role: PUBLIC_ACCESS }
+        - { path: ^/register$, role: PUBLIC_ACCESS }
+        - { path: ^/email_verification$, role: PUBLIC_ACCESS }
+        - { path: ^/authentication$, role: PUBLIC_ACCESS }
         - { path: ^/admin/login$, role: PUBLIC_ACCESS }
         - { path: ^/admin/logout$, role: PUBLIC_ACCESS }
         - { path: ^/admin/password_request$, role: PUBLIC_ACCESS }

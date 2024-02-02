@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Service;
 
 use Twig\Environment;
@@ -12,7 +14,8 @@ use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 
 class Mailer {
 
-    const FROM = 'Sonata Administration';
+    const FROM = 'API';
+    const FROM_ADMIN = 'API Admin';
     const FROM_EMAIL = 'no-reply@docker.localhost';
 
 
@@ -28,7 +31,7 @@ class Mailer {
     public function send(): bool 
     {
         $email = (new Email())
-            ->from('hello@example.com')
+            ->from(sprintf('%s <%s>', self::FROM, self::FROM_EMAIL))
             ->to('you@example.com')
             ->subject('Time for Symfony Mailer!')
             ->text('Sending emails is fun again!')
@@ -46,7 +49,7 @@ class Mailer {
     public function sendNotification(string $message): bool 
     {
         $email = (new Email())
-            ->from('hello@example.com')
+            ->from(sprintf('%s <%s>', self::FROM, self::FROM_EMAIL))
             ->to('you@example.com')
             ->subject('New message')
             ->text($message)
@@ -61,14 +64,54 @@ class Mailer {
         }
     }
 
-    public function userCreatedNotification(string $message): bool 
+    public function sendUserVWelcomeMessage(UserInterface $user): bool 
     {
+        /** @var UserInterface $user */
         $email = (new Email())
-            ->from('hello@example.com')
+            ->from(sprintf('%s <%s>', self::FROM, self::FROM_EMAIL))
+            ->to($user->getEmail())
+            ->subject(sprintf('Welcome %s!', $user->getFirstName()))
+            ->html('Some welcome blah blah blah');
+
+        try {
+            $this->mailer->send($email);
+            return true;
+        } catch (TransportExceptionInterface $e) {
+            dd($e);
+            return false;
+        }
+    }
+
+    public function sendUserVerifiedNotification(UserInterface $user): bool 
+    {
+         /** @var UserInterface $user */
+         $email = (new Email())
+            ->from(sprintf('%s <%s>', self::FROM, self::FROM_EMAIL))
             ->to('you@example.com')
-            ->subject('A new user has been created')
-            ->text($message)
-            ->html($message);
+            ->subject('A new user has been verified')
+            ->html(sprintf('User %s has been verified!', $user->__toString()));
+
+        try {
+            $this->mailer->send($email);
+            return true;
+        } catch (TransportExceptionInterface $e) {
+            dd($e);
+            return false;
+        }
+    }
+
+    public function sendEmailVerificationCode(UserInterface $user): bool 
+    {
+        /** @var UserInterface $user */
+        $body = $this->twig->render('Registration/Email/email_verification_code.html.twig', [
+            'user' => $user
+        ]);
+
+        $email = (new Email())
+            ->from(sprintf('%s <%s>', self::FROM, self::FROM_EMAIL))
+            ->to($user->getEmail())
+            ->subject($this->translator->trans('email.subject.email_verification'))
+            ->html($body);
 
         try {
             $this->mailer->send($email);
@@ -92,9 +135,9 @@ class Mailer {
         ]);
 
         $email = (new Email())
-            ->from(sprintf('%s <%s>', self::FROM, self::FROM_EMAIL))
+            ->from(sprintf('%s <%s>', self::FROM_ADMIN, self::FROM_EMAIL))
             ->to($user->getEmail())
-            ->subject($this->translator->trans('security.password_reset.request.subject'))
+            ->subject($this->translator->trans('email.subject.password_reset'))
             ->html($body);
 
         try {
