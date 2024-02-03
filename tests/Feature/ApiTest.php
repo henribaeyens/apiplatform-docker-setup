@@ -1,8 +1,8 @@
 
 <?php
 
-use Symfony\Component\HttpFoundation\Response;
 use ApiPlatform\Symfony\Security\Exception\AccessDeniedException;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 uses(App\Tests\ApiTestCase::class);
@@ -21,14 +21,14 @@ it('fails to authenticate a user (wrong or non-existing email address)', functio
         [],
         ['base_uri' => $this->baseUrl],
     )->request(
-        'POST', 
+        'POST',
         '/authentication',
         [
             'body' => json_encode($payload),
             'headers' => [
                 'accept' => ['application/ld+json'],
                 'CONTENT_TYPE' => 'application/ld+json',
-            ]
+            ],
         ]
     );
 
@@ -45,14 +45,14 @@ it('fails to authenticate a non-verified user', function () {
         [],
         ['base_uri' => $this->baseUrl],
     )->request(
-        'POST', 
+        'POST',
         '/authentication',
         [
             'body' => json_encode($payload),
             'headers' => [
                 'accept' => ['application/ld+json'],
                 'CONTENT_TYPE' => 'application/ld+json',
-            ]
+            ],
         ]
     );
 
@@ -69,14 +69,14 @@ it('authenticates a verified user', function () {
         [],
         ['base_uri' => $this->baseUrl],
     )->request(
-        'POST', 
+        'POST',
         '/authentication',
         [
             'body' => json_encode($payload),
             'headers' => [
                 'accept' => ['application/json'],
                 'CONTENT_TYPE' => 'application/json',
-            ]
+            ],
         ]
     );
 
@@ -84,7 +84,7 @@ it('authenticates a verified user', function () {
     expect($response->toArray())->toHaveKey('token');
 });
 
-it('authenticates (should succeed) and get a list of all users (should succeed in failing: only ADMINs can)', function () {    
+it('authenticates (should succeed) and get a list of all users (should succeed in failing: only ADMINs can)', function () {
     $payload = [
         'email' => 'user1@api.local',
         'password' => 'notsosecret',
@@ -96,14 +96,14 @@ it('authenticates (should succeed) and get a list of all users (should succeed i
     );
 
     $response = $client->request(
-        'POST', 
+        'POST',
         '/authentication',
         [
             'body' => json_encode($payload),
             'headers' => [
                 'accept' => ['application/json'],
                 'CONTENT_TYPE' => 'application/json',
-            ]
+            ],
         ]
     );
 
@@ -116,14 +116,14 @@ it('authenticates (should succeed) and get a list of all users (should succeed i
     $client->getKernelBrowser()->catchExceptions(false);
 
     $client->request(
-        'GET', 
-        '/' . $this->apiVersion . '/users',
+        'GET',
+        '/'.$this->apiVersion.'/users',
         [
             'headers' => [
                 'accept' => ['application/ld+json'],
                 'CONTENT_TYPE' => 'application/ld+json',
-                'Authorization' => 'Bearer ' . $token,
-            ]
+                'Authorization' => 'Bearer '.$token,
+            ],
         ]
     );
 });
@@ -146,14 +146,14 @@ it('registers a user, verifies it, and returns an authentication token', functio
         [],
         ['base_uri' => $this->baseUrl],
     )->request(
-        'POST', 
+        'POST',
         '/register',
         [
             'body' => json_encode($payload),
             'headers' => [
                 'accept' => ['application/ld+json'],
                 'CONTENT_TYPE' => 'application/ld+json',
-            ]
+            ],
         ]
     );
 
@@ -175,18 +175,17 @@ it('registers a user, verifies it, and returns an authentication token', functio
         [],
         ['base_uri' => $this->baseUrl],
     )->request(
-        'POST', 
+        'POST',
         '/email_verification',
         [
             'body' => json_encode($payload),
             'headers' => [
                 'accept' => ['application/ld+json'],
                 'CONTENT_TYPE' => 'application/ld+json',
-            ]
+            ],
         ]
     );
 
     expect($response->getStatusCode())->toBe(Response::HTTP_OK);
     expect($response->toArray())->toHaveKey('token');
 });
-

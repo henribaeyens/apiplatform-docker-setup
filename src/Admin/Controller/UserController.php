@@ -18,12 +18,15 @@ use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
+/**
+ * @extends AbstractAdmin<UserController>
+ */
 final class UserController extends AbstractAdmin
 {
     /** @var UserPasswordHasherInterface */
     protected $passwordHasher;
 
-    public function setPasswordHasher(UserPasswordHasherInterface $userPasswordHasherInterface)
+    public function setPasswordHasher(UserPasswordHasherInterface $userPasswordHasherInterface): void
     {
         $this->passwordHasher = $userPasswordHasherInterface;
     }
@@ -139,6 +142,7 @@ final class UserController extends AbstractAdmin
 
     protected function preUpdate(object $user): void
     {
+        /* @var UserInterface $user */
         if (null !== $user->getPlainPassword()) {
             $hashedPassword = $this->passwordHasher->hashPassword($user, $user->getPlainPassword());
             $user->setPassword($hashedPassword);

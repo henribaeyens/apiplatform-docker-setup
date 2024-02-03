@@ -11,7 +11,7 @@
 |
 */
 
-//uses(App\Tests\TestCase::class)->in('Feature');
+// uses(App\Tests\TestCase::class)->in('Feature');
 
 /*
 |--------------------------------------------------------------------------
