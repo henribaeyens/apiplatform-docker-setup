@@ -29,7 +29,7 @@ final class JsonListFilter extends Filter
         $parameterName = $this->getNewParameterName($query);
         $and = $query->getQueryBuilder()->expr()->andX();
         $and->add(sprintf('%sJSON_CONTAINS(%s.%s, :%s) = 1', $operator, $alias, $field, $parameterName));
-        $query->getQueryBuilder()->setParameter($parameterName, '"' . $value . '"');
+        $query->getQueryBuilder()->setParameter($parameterName, '"'.$value.'"');
 
         $this->applyWhere($query, $and);
     }
@@ -44,7 +44,7 @@ final class JsonListFilter extends Filter
         return [ChoiceType::class, [
             'field_type' => $this->getFieldType(),
             'field_options' => $this->getFieldOptions(),
-            'label' => $this->getLabel()
+            'label' => $this->getLabel(),
         ]];
     }
 }

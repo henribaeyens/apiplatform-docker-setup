@@ -5,17 +5,17 @@ declare(strict_types=1);
 namespace App\Controller\Security;
 
 use Sonata\AdminBundle\Admin\Pool;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Contracts\Translation\TranslatorInterface;
-use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\HttpKernel\Attribute\AsController;
-use Symfony\Component\Security\Http\Attribute\CurrentUser;
+use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Security\Http\Attribute\CurrentUser;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 #[AsController]
 final class LoginController extends AbstractController
@@ -36,6 +36,7 @@ final class LoginController extends AbstractController
                 'error',
                 $this->translator->trans('flash.error.user_already_authenticated')
             );
+
             return $this->redirectToRoute('sonata_admin_dashboard');
         }
 

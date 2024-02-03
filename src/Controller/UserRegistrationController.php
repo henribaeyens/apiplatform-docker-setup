@@ -5,24 +5,24 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Enum\UserRole;
-use App\Model\UserRegistrationModel;
-use App\Service\Mailer;
-use App\Repository\UserRepository;
-use App\Helper\RandomnessGenerator;
 use App\Factory\UserFactoryInterface;
-use Symfony\Component\Form\FormInterface;
 use App\Form\Type\UserRegistrationFormType;
+use App\Helper\RandomnessGenerator;
+use App\Model\UserRegistrationModel;
+use App\Repository\UserRepository;
+use App\Service\Mailer;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\FormInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Attribute\AsController;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
+use Symfony\Component\Serializer\Context\Normalizer\ObjectNormalizerContextBuilder;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
-use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Component\HttpKernel\Attribute\AsController;
-use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Serializer\Context\Normalizer\ObjectNormalizerContextBuilder;
 
 #[AsController]
 final class UserRegistrationController extends AbstractController
@@ -47,7 +47,7 @@ final class UserRegistrationController extends AbstractController
         $form->submit($data);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            /** @var UserInterface $user */
+            /* @var UserInterface $user */
             try {
                 $user = $this->userFactory->create(
                     firstName: $form->getData()->getFirstName(),
@@ -70,10 +70,10 @@ final class UserRegistrationController extends AbstractController
             ;
 
             return new JsonResponse(
-                $this->serializer->serialize($user, 'json', $context), 
-                Response::HTTP_CREATED, 
+                $this->serializer->serialize($user, 'json', $context),
+                Response::HTTP_CREATED,
                 [
-                    'content-type' => 'application/json'
+                    'content-type' => 'application/json',
                 ],
                 true
             );
@@ -89,7 +89,7 @@ final class UserRegistrationController extends AbstractController
 
     private function getErrorsFromForm(FormInterface $form)
     {
-        $errors = array();
+        $errors = [];
 
         foreach ($form->getErrors() as $error) {
             $errors[] = $error->getMessage();
@@ -101,7 +101,7 @@ final class UserRegistrationController extends AbstractController
                 }
             }
         }
+
         return $errors;
     }
-
 }

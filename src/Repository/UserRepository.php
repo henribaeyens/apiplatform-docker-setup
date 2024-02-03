@@ -3,12 +3,12 @@
 namespace App\Repository;
 
 use App\Entity\User;
-use Doctrine\Persistence\ManagerRegistry;
-use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @extends ServiceEntityRepository<User>
@@ -48,17 +48,16 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
 
     public function findAdminByEmail($email): UserInterface|null
     {
-        return 
+        return
             $this->createQueryBuilder('u')
                 ->andWhere('u.email = :email')
                 ->andWhere('JSON_CONTAINS(u.roles, :role) = 1')
                 ->setParameters([
                     'email' => $email,
-                    'role' => '"ROLE_ADMIN"'
+                    'role' => '"ROLE_ADMIN"',
                 ])
                 ->getQuery()
                 ->getOneOrNullResult()
         ;
     }
-
 }

@@ -4,19 +4,19 @@ declare(strict_types=1);
 
 namespace App\Controller\Security;
 
-use App\Service\Mailer;
+use App\Form\Type\ResetPasswordRequestFormType;
 use App\Repository\UserRepository;
+use App\Service\Mailer;
 use Sonata\AdminBundle\Admin\Pool;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use App\Form\Type\ResetPasswordRequestFormType;
-use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Contracts\Translation\TranslatorInterface;
-use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\HttpKernel\Attribute\AsController;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Csrf\TokenGenerator\TokenGeneratorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 #[AsController]
 final class PasswordRequestController extends AbstractController

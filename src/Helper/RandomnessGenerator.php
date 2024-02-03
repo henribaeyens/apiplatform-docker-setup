@@ -13,7 +13,7 @@ final class RandomnessGenerator
     public function __construct()
     {
         $this->digits = implode(range(1, 9));
-        $this->alphaNum = implode(range(1, 9)) . implode(range('a', 'z')) . implode(range('A', 'Z'));
+        $this->alphaNum = implode(range(1, 9)).implode(range('a', 'z')).implode(range('A', 'Z'));
         $this->alphabet = implode(range('a', 'z'));
     }
 

@@ -6,16 +6,15 @@ namespace App\Factory;
 
 use App\Entity\User;
 use App\Repository\UserRepository;
-use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 final class UserFactory implements UserFactoryInterface
 {
     public function __construct(
         private readonly UserPasswordHasherInterface $passwordHasher,
         private readonly UserRepository $userRepository,
-    )
-    {
+    ) {
     }
 
     public function create(
@@ -25,14 +24,13 @@ final class UserFactory implements UserFactoryInterface
         string $plainPassword,
         array $roles,
         bool $verified = false
-    ): UserInterface
-    {      
+    ): UserInterface {
         $userExists = $this->userRepository->findOneBy(['email' => $email]);
 
         if (null !== $userExists) {
             throw new \RuntimeException(sprintf('There is already a user registered with the "%s" email.', $email));
         }
-        
+
         $user = new User();
         $user->setEmail($email);
         $user->setFirstName($firstName);
@@ -43,5 +41,5 @@ final class UserFactory implements UserFactoryInterface
         $user->setVerified($verified);
 
         return $user;
-   }
+    }
 }

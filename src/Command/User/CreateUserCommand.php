@@ -5,17 +5,18 @@ declare(strict_types=1);
 namespace App\Command\User;
 
 use App\Enum\UserRole;
-use App\Repository\UserRepository;
 use App\Factory\UserFactoryInterface;
-use function Symfony\Component\String\u;
-use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Style\SymfonyStyle;
+use App\Repository\UserRepository;
 use Symfony\Component\Console\Attribute\AsCommand;
+use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Exception\InvalidArgumentException;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Component\Console\Exception\InvalidArgumentException;
+
+use function Symfony\Component\String\u;
 
 /**
  * User creation command.
@@ -62,14 +63,14 @@ class CreateUserCommand extends Command
     }
 
     protected function interact(InputInterface $input, OutputInterface $output): void
-    {        
+    {
         $this->io->title('To create a user, answer the following questions:');
 
         $firstname = $this->io->ask('Enter user\'s first name', '', function (string $firstname): string {
             if (empty($firstname)) {
                 throw new InvalidArgumentException('Cannot be empty.');
             }
-        
+
             return $firstname;
         });
 
@@ -77,7 +78,7 @@ class CreateUserCommand extends Command
             if (empty($lastname)) {
                 throw new InvalidArgumentException('Cannot be empty.');
             }
-        
+
             return $lastname;
         });
 
@@ -88,8 +89,7 @@ class CreateUserCommand extends Command
             if (null === u($email)->indexOf('@')) {
                 throw new InvalidArgumentException('The email should look like a real email.');
             }
-    
-            
+
             return $email;
         });
 
@@ -97,7 +97,7 @@ class CreateUserCommand extends Command
             if (empty($password)) {
                 throw new InvalidArgumentException('Cannot be empty.');
             }
-        
+
             return $password;
         });
 
@@ -123,34 +123,34 @@ class CreateUserCommand extends Command
         /** @var string $isAdmin */
         $isAdmin = $input->getArgument(self::ARG_IS_ADMIN);
 
-        /** @var UserInterface $user */
+        /* @var UserInterface $user */
         try {
             $user = $this->userFactory->create(
                 firstName: $firstname,
                 lastName: $lastname,
                 email: $email,
                 plainPassword: $plainPassword,
-                roles: ['Yes'=== $isAdmin ? UserRole::ADMIN->value : UserRole::USER->value],
-                verified: 'Yes'=== $isAdmin
+                roles: ['Yes' === $isAdmin ? UserRole::ADMIN->value : UserRole::USER->value],
+                verified: 'Yes' === $isAdmin
             );
         } catch (\RuntimeException $e) {
             $this->io->error(
                 $e->getMessage()
             );
+
             return Command::FAILURE;
         }
         $this->userRepository->save($user);
 
         $this->io->success(
             sprintf(
-                '%s was successfully created: %s (%s)', 
-                'Yes'=== $isAdmin ? 'Administrator' : 'User', 
-                $user->getFirstName() . ' ' . $user->getLastName(), 
+                '%s was successfully created: %s (%s)',
+                'Yes' === $isAdmin ? 'Administrator' : 'User',
+                $user->getFirstName().' '.$user->getLastName(),
                 $user->getEmail()
             )
         );
 
         return Command::SUCCESS;
     }
-
 }

@@ -19,5 +19,4 @@ class ResetPasswordModel
 
         return $this;
     }
-
 }

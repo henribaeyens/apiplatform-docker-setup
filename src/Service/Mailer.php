@@ -4,31 +4,29 @@ declare(strict_types=1);
 
 namespace App\Service;
 
-use Twig\Environment;
-use Symfony\Component\Mime\Email;
-use Symfony\Component\Mailer\MailerInterface;
-use Symfony\Contracts\Translation\TranslatorInterface;
-use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Email;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
+use Twig\Environment;
 
-class Mailer {
-
-    const FROM = 'API';
-    const FROM_ADMIN = 'API Admin';
-    const FROM_EMAIL = 'no-reply@docker.localhost';
-
+class Mailer
+{
+    public const FROM = 'API';
+    public const FROM_ADMIN = 'API Admin';
+    public const FROM_EMAIL = 'no-reply@docker.localhost';
 
     public function __construct(
         private MailerInterface $mailer,
         private UrlGeneratorInterface $urlGenerator,
         private Environment $twig,
         private TranslatorInterface $translator,
-    )
-    {
+    ) {
     }
 
-    public function send(): bool 
+    public function send(): bool
     {
         $email = (new Email())
             ->from(sprintf('%s <%s>', self::FROM, self::FROM_EMAIL))
@@ -39,14 +37,16 @@ class Mailer {
 
         try {
             $this->mailer->send($email);
+
             return true;
         } catch (TransportExceptionInterface $e) {
             dd($e);
+
             return false;
         }
     }
 
-    public function sendNotification(string $message): bool 
+    public function sendNotification(string $message): bool
     {
         $email = (new Email())
             ->from(sprintf('%s <%s>', self::FROM, self::FROM_EMAIL))
@@ -57,14 +57,16 @@ class Mailer {
 
         try {
             $this->mailer->send($email);
+
             return true;
         } catch (TransportExceptionInterface $e) {
             dd($e);
+
             return false;
         }
     }
 
-    public function sendUserVWelcomeMessage(UserInterface $user): bool 
+    public function sendUserVWelcomeMessage(UserInterface $user): bool
     {
         /** @var UserInterface $user */
         $email = (new Email())
@@ -75,36 +77,40 @@ class Mailer {
 
         try {
             $this->mailer->send($email);
+
             return true;
         } catch (TransportExceptionInterface $e) {
             dd($e);
+
             return false;
         }
     }
 
-    public function sendUserVerifiedNotification(UserInterface $user): bool 
+    public function sendUserVerifiedNotification(UserInterface $user): bool
     {
-         /** @var UserInterface $user */
-         $email = (new Email())
-            ->from(sprintf('%s <%s>', self::FROM, self::FROM_EMAIL))
-            ->to('you@example.com')
-            ->subject('A new user has been verified')
-            ->html(sprintf('User %s has been verified!', $user->__toString()));
+        /** @var UserInterface $user */
+        $email = (new Email())
+           ->from(sprintf('%s <%s>', self::FROM, self::FROM_EMAIL))
+           ->to('you@example.com')
+           ->subject('A new user has been verified')
+           ->html(sprintf('User %s has been verified!', $user->__toString()));
 
         try {
             $this->mailer->send($email);
+
             return true;
         } catch (TransportExceptionInterface $e) {
             dd($e);
+
             return false;
         }
     }
 
-    public function sendEmailVerificationCode(UserInterface $user): bool 
+    public function sendEmailVerificationCode(UserInterface $user): bool
     {
         /** @var UserInterface $user */
         $body = $this->twig->render('Registration/Email/email_verification_code.html.twig', [
-            'user' => $user
+            'user' => $user,
         ]);
 
         $email = (new Email())
@@ -115,14 +121,16 @@ class Mailer {
 
         try {
             $this->mailer->send($email);
+
             return true;
         } catch (TransportExceptionInterface $e) {
             dd($e);
+
             return false;
         }
     }
 
-    public function sendResettingEmailMessage(UserInterface $user): bool 
+    public function sendResettingEmailMessage(UserInterface $user): bool
     {
         /** @var UserInterface $user */
         $url = $this->urlGenerator->generate('admin_password_reset', [
@@ -142,11 +150,12 @@ class Mailer {
 
         try {
             $this->mailer->send($email);
+
             return true;
         } catch (TransportExceptionInterface $e) {
             dd($e);
+
             return false;
         }
     }
-
 }
