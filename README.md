@@ -122,7 +122,7 @@ A user who does not have the admin role cannot request other users.
 ### Test 5
 A user registers and is verified.   
 This is a two-step process: upon successful registration, the user is sent a verification code via email. The code is then POSTed to the API to verify the user.   
-This would typically be done via an interface (React or whatever)
+This would typically be done via some front-end interface.
 
 
 # Code quality analysis
