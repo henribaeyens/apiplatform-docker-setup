@@ -4,10 +4,13 @@ declare(strict_types=1);
 
 namespace App\Factory;
 
-use Symfony\Component\Security\Core\User\UserInterface;
+use App\Entity\UserInterface;
 
 interface UserFactoryInterface
 {
+    /**
+     * @param array<string> $roles
+     */
     public function create(
         string $firstName,
         string $lastName,

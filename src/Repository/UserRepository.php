@@ -1,19 +1,25 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Repository;
 
 use App\Entity\User;
-use Doctrine\Persistence\ManagerRegistry;
-use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
+use App\Entity\UserInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
 
 /**
  * @extends ServiceEntityRepository<User>
  *
- * @implements PasswordUpgraderInterface<User>
+ * @method UserInterface|null find($id, $lockMode = null, $lockVersion = null)
+ * @method UserInterface|null findOneBy(array $criteria, array $orderBy = null)
+ * @method UserInterface[]    findAll()
+ * @method UserInterface[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
 class UserRepository extends ServiceEntityRepository implements PasswordUpgraderInterface
 {
@@ -46,19 +52,24 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $this->getEntityManager()->flush();
     }
 
-    public function findAdminByEmail($email): UserInterface|null
+    public function findAdminByEmail(string $email): UserInterface|null
     {
-        return 
-            $this->createQueryBuilder('u')
-                ->andWhere('u.email = :email')
-                ->andWhere('JSON_CONTAINS(u.roles, :role) = 1')
-                ->setParameters([
-                    'email' => $email,
-                    'role' => '"ROLE_ADMIN"'
-                ])
-                ->getQuery()
-                ->getOneOrNullResult()
-        ;
-    }
+        try {
+            $user =
+                $this->createQueryBuilder('u')
+                    ->andWhere('u.email = :email')
+                    ->andWhere('JSON_CONTAINS(u.roles, :role) = 1')
+                    ->setParameters([
+                        'email' => $email,
+                        'role' => '"ROLE_ADMIN"',
+                    ])
+                    ->getQuery()
+                    ->getOneOrNullResult()
+            ;
+        } catch (NonUniqueResultException $e) {
+            return null;
+        }
 
+        return $user;
+    }
 }

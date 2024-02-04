@@ -4,26 +4,30 @@ declare(strict_types=1);
 
 namespace App\Admin\Controller;
 
+use App\Entity\User;
 use App\Enum\UserRole;
 use App\Filter\JsonListFilter;
-use Sonata\AdminBundle\Form\FormMapper;
 use Sonata\AdminBundle\Admin\AbstractAdmin;
-use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\Extension\Core\Type\EmailType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
-use Symfony\Component\Form\Extension\Core\Type\PasswordType;
+use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\FieldDescription\FieldDescriptionInterface;
+use Sonata\AdminBundle\Form\FormMapper;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
+use Symfony\Component\Form\Extension\Core\Type\PasswordType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
+/**
+ * @extends AbstractAdmin<UserController>
+ */
 final class UserController extends AbstractAdmin
 {
     /** @var UserPasswordHasherInterface */
     protected $passwordHasher;
 
-    public function setPasswordHasher(UserPasswordHasherInterface $userPasswordHasherInterface)
+    public function setPasswordHasher(UserPasswordHasherInterface $userPasswordHasherInterface): void
     {
         $this->passwordHasher = $userPasswordHasherInterface;
     }
@@ -33,9 +37,9 @@ final class UserController extends AbstractAdmin
         $buttonList = parent::configureActionButtons($buttonList, $action, $object);
         if ($this->isCurrentRoute('edit')) {
             unset($buttonList['create']);
-        }        
-    
-        return $buttonList;    
+        }
+
+        return $buttonList;
     }
 
     protected function configureFormFields(FormMapper $form): void
@@ -50,18 +54,18 @@ final class UserController extends AbstractAdmin
                 ->with('User Information')
                     ->add('firstName', TextType::class, [
                         'label' => 'form.label.firstname',
-                        'required' => false
+                        'required' => false,
                     ])
                     ->add('lastName', TextType::class, [
                         'label' => 'form.label.lastname',
-                        'required' => false
+                        'required' => false,
                     ])
                     ->add('email', EmailType::class, [
-                        'label' => 'form.label.email'
+                        'label' => 'form.label.email',
                     ])
                     ->add('verified', CheckboxType::class, [
                         'label' => 'form.label.verified',
-                        'required' => false
+                        'required' => false,
                     ])
                 ->end()
             ->end()
@@ -69,20 +73,20 @@ final class UserController extends AbstractAdmin
                 ->with('Login Information')
                     ->add('plainPassword', PasswordType::class, [
                         'label' => 'form.label.password',
-                        'required' => $this->isCurrentRoute('create') ? true : false
+                        'required' => $this->isCurrentRoute('create') ? true : false,
                     ])
                     ->add('roles', ChoiceType::class, [
                         'label' => 'form.label.role',
                         'choices' => array_flip($roles),
                         'multiple' => true,
-                        'expanded' => true
+                        'expanded' => true,
                     ])
                 ->end()
             ->end()
         ;
     }
 
-    protected function configureDatagridFilters(DatagridMapper $datagrid ): void
+    protected function configureDatagridFilters(DatagridMapper $datagrid): void
     {
         $roles = [];
         foreach (UserRole::cases() as $role) {
@@ -93,17 +97,17 @@ final class UserController extends AbstractAdmin
             ->add('email', null, [
                 'label' => 'form.label.email',
                 'show_filter' => true,
-                'advanced_filter' => false
+                'advanced_filter' => false,
             ])
             ->add('roles', JsonListFilter::class, [
                 'label' => 'form.label.role',
                 'field_type' => ChoiceType::class,
                 'field_options' => [
                     'choices' => array_flip($roles),
-                    'multiple' => false
+                    'multiple' => false,
                 ],
                 'show_filter' => true,
-                'advanced_filter' => false
+                'advanced_filter' => false,
             ])
         ;
     }
@@ -114,31 +118,32 @@ final class UserController extends AbstractAdmin
             ->addIdentifier('id')
             ->add('lastName', null, [
                 'label' => 'form.label.lastname',
-                'sortable' => false
+                'sortable' => false,
             ])
             ->add('firstName', null, [
                 'label' => 'form.label.firstname',
-                'sortable' => false
+                'sortable' => false,
             ])
             ->add('email', null, [
                 'label' => 'form.label.email',
-                'sortable' => false
+                'sortable' => false,
             ])
             ->add('verified', FieldDescriptionInterface::TYPE_BOOLEAN, [
-                'label' => 'form.label.verified'
+                'label' => 'form.label.verified',
             ])
             ->add(ListMapper::NAME_ACTIONS, null, [
                 'actions' => [
-                    //'show' => [],
+                    // 'show' => [],
                     'edit' => [],
-                    'delete' => []
-                ]
+                    'delete' => [],
+                ],
             ])
         ;
     }
 
     protected function preUpdate(object $user): void
     {
+        /** @var User $user */
         if (null !== $user->getPlainPassword()) {
             $hashedPassword = $this->passwordHasher->hashPassword($user, $user->getPlainPassword());
             $user->setPassword($hashedPassword);
@@ -147,7 +152,8 @@ final class UserController extends AbstractAdmin
 
     protected function prePersist(object $user): void
     {
-         if (null !== $user->getPlainPassword()) {
+        /** @var User $user */
+        if (null !== $user->getPlainPassword()) {
             $hashedPassword = $this->passwordHasher->hashPassword($user, $user->getPlainPassword());
             $user->setPassword($hashedPassword);
         }

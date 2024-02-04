@@ -11,35 +11,27 @@ use Doctrine\ORM\Mapping\PreUpdate;
 
 trait Timestampable
 {
-    /**
-     * @var \DateTimeInterface
-     */
     #[Column(name: 'created_at', type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $createdAt;
 
-    /**
-     * @var \DateTimeInterface
-     */
     #[Column(name: 'updated_at', type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $updatedAt;
 
     #[PrePersist]
-    public function onPrePersist()
+    public function onPrePersist(): void
     {
         $this->createdAt = new \DateTime();
         $this->updatedAt = new \DateTime();
     }
 
     #[PreUpdate]
-    public function onPreUpdate()
+    public function onPreUpdate(): void
     {
         $this->updatedAt = new \DateTime();
     }
 
     /**
-     * Set createdAt
-     *
-     * @param \DateTimeInterface $createdAt
+     * Set createdAt.
      */
     public function setCreatedAt(\DateTimeInterface $createdAt): static
     {
@@ -49,9 +41,7 @@ trait Timestampable
     }
 
     /**
-     * Get createdAt
-     *
-     * @return \DateTimeInterface
+     * Get createdAt.
      */
     public function getCreatedAt(): ?\DateTimeInterface
     {
@@ -59,9 +49,7 @@ trait Timestampable
     }
 
     /**
-     * Set updatedAt
-     *
-     * @param \DateTimeInterface $updatedAt
+     * Set updatedAt.
      */
     public function setUpdatedAt(\DateTimeInterface $updatedAt): static
     {
@@ -71,11 +59,9 @@ trait Timestampable
     }
 
     /**
-     * Get updatedAt
-     *
-     * @return \DateTimeInterface
+     * Get updatedAt.
      */
-    public function getUpdatedAt(): \DateTimeInterface
+    public function getUpdatedAt(): ?\DateTimeInterface
     {
         return $this->updatedAt;
     }
