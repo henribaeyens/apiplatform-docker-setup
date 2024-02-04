@@ -1,0 +1,8 @@
+
+parameters:
+	treatPhpDocTypesAsCertain: false
+	checkGenericClassInNonGenericObjectType: false
+	ignoreErrors:
+		- '#Cannot call method [a-zA-Z0-9]+\(\) on mixed\.#'
+		- '#Call to an undefined method .+::find(One)?By.+\(\)#'
+		- '#Cannot cast mixed to string#'

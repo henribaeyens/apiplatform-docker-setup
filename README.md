@@ -58,6 +58,18 @@ make init
 make rebuild
 ```
 
+# Doctrine migrations
+Migrations are performed at build time. The following command can be invoked after the generation of new migrations:
+```
+make migrate
+```
+
+# Loading fixtures
+Fixtures are loaded at build time. They can be reloaded with:
+```
+make load-fixtures
+```
+
 # Administration
 
 SonataAdmin is installed.  
@@ -77,10 +89,11 @@ A few very basic tests have been implemented.
 Run the tests with the following command:
 ### From the host shell
 ```
-make host-test
+make test-from-host
 ```
 ### From the php container's shell
 ```
+bin/bash # to connect to container's shell
 make test
 ```
 
@@ -93,7 +106,7 @@ Dispatch a message to the RabbitMQ broker.
 You can check the RabbitMQ management interface at https://rmq.api.docker.localhost to see if it is there.   
 Invoke the following command to consume the message:
 ```
-bin/bash # access the php container
+bin/bash # to connect to container's shell
 bin/console messenger:consume -vv
 ```
 ### API tests
@@ -111,25 +124,14 @@ A user registers and is verified.
 This is a two-step process: upon successful registration, the user is sent a verification code via email. The code is then POSTed to the API to verify the user.   
 This would typically be done via an interface (React or whatever)
 
-# Doctrine migrations
-Migrations are performed at build time. The following command can be invoked after the generation of new migrations:
-```
-make migrate
-```
 
-# Loading fixtures
-Fixtures are loaded at build time. They can be reloaded with:
+# Code quality analysis
+2 tools are available:
+## cs-fixer
 ```
-make load-fixtures
+make csfixer
 ```
-
-# The Makefile
-All make commands (expect the ones related to testing) are meant to be be run from the host shell.  
-- init (alias for build)
-- build
-- rebuild
-- test (to run form the php container shell)
-- host-test (to run from the host shell)
-- migrate
-- load-fixtures
-
+## php-stan
+```
+make phpstan
+```

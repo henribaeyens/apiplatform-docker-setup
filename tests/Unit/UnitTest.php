@@ -1,7 +1,7 @@
 <?php
 
-use App\Service\Mailer;
 use App\Message\MailNotification as MailNotificationMessage;
+use App\Service\Mailer;
 
 uses(App\Tests\TestCase::class);
 
@@ -27,4 +27,3 @@ it('sends a message to the broker', function () {
 
     expect($response)->toBeInstanceOf(Symfony\Component\Messenger\Envelope::class);
 });
-

@@ -6,14 +6,14 @@ namespace App\Helper;
 
 final class RandomnessGenerator
 {
-    private string $digit;
+    private string $digits;
     private string $alphaNum;
     private string $alphabet;
 
     public function __construct()
     {
         $this->digits = implode(range(1, 9));
-        $this->alphaNum = implode(range(1, 9)) . implode(range('a', 'z')) . implode(range('A', 'Z'));
+        $this->alphaNum = implode(range(1, 9)).implode(range('a', 'z')).implode(range('A', 'Z'));
         $this->alphabet = implode(range('a', 'z'));
     }
 
@@ -43,7 +43,7 @@ final class RandomnessGenerator
         $randomString = '';
 
         for ($i = 0; $i < $length; ++$i) {
-            $index = random_int(1, $alphabetMaxIndex);
+            $index = random_int(0, $alphabetMaxIndex); // @phpstan-ignore-line
             $randomString .= $pool[$index];
         }
 

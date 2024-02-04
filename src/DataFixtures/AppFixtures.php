@@ -4,21 +4,21 @@ declare(strict_types=1);
 
 namespace App\DataFixtures;
 
+use App\Entity\UserInterface;
 use App\Enum\UserRole;
-use App\Repository\UserRepository;
 use App\Factory\UserFactoryInterface;
-use Doctrine\Persistence\ObjectManager;
+use App\Repository\UserRepository;
 use Doctrine\Bundle\FixturesBundle\Fixture;
-use Symfony\Component\Security\Core\User\UserInterface;
+use Doctrine\Persistence\ObjectManager;
 
 class AppFixtures extends Fixture
 {
     public function __construct(
         private readonly UserFactoryInterface $userFactory,
         private readonly UserRepository $userRepository,
-    )
-    {
+    ) {
     }
+
     public function load(ObjectManager $manager): void
     {
         /** @var UserInterface $user */
@@ -27,7 +27,7 @@ class AppFixtures extends Fixture
             lastName: 'lname1',
             email: 'user1@api.local',
             plainPassword: 'notsosecret',
-            roles: [ UserRole::USER->value],
+            roles: [UserRole::USER->value],
             verified: true
         );
         $this->userRepository->save($user);
@@ -38,18 +38,7 @@ class AppFixtures extends Fixture
             lastName: 'lname3',
             email: 'user2@api.local',
             plainPassword: 'nottoosecret',
-            roles: [ UserRole::USER->value],
-        );
-        $this->userRepository->save($user);
-
-        /** @var UserInterface $user */
-        $user = $this->userFactory->create(
-            firstName: 'fname3',
-            lastName: 'lname3',
-            email: 'user3@api.local',
-            plainPassword: 'notmuchofasecret',
-            roles: [ UserRole::ADMIN->value],
-            verified: true
+            roles: [UserRole::USER->value],
         );
         $this->userRepository->save($user);
     }
