@@ -24,7 +24,7 @@ final class CheckEmailController extends AbstractController
     #[Route('/admin/check_email/{email}', name: 'admin_check_email')]
     public function __invoke(Request $request, string $email): Response|RedirectResponse
     {
-        if (null === $email) {
+        if (empty($email)) {
             return $this->redirectToRoute('admin_password_request');
         }
 

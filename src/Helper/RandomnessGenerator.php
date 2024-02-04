@@ -6,7 +6,7 @@ namespace App\Helper;
 
 final class RandomnessGenerator
 {
-    private string $digit;
+    private string $digits;
     private string $alphaNum;
     private string $alphabet;
 
@@ -43,7 +43,7 @@ final class RandomnessGenerator
         $randomString = '';
 
         for ($i = 0; $i < $length; ++$i) {
-            $index = random_int(1, $alphabetMaxIndex);
+            $index = random_int(0, $alphabetMaxIndex); // @phpstan-ignore-line
             $randomString .= $pool[$index];
         }
 

@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace App\Event;
 
+use App\Entity\User;
+use App\Entity\UserInterface;
 use Doctrine\Bundle\DoctrineBundle\Attribute\AsEntityListener;
 use Doctrine\ORM\Events;
-use Symfony\Component\Security\Core\User\UserInterface;
 
 #[AsEntityListener(event: Events::postPersist, method: 'newUserCreated', entity: User::class)]
 final class UserCreatedEvent

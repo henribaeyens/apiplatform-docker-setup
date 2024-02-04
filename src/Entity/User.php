@@ -14,12 +14,11 @@ use ApiPlatform\Metadata\Put;
 use App\Entity\Trait\Timestampable;
 use App\Enum\UserRole;
 use App\Repository\UserRepository;
-use App\State\UserPasswordHasher;
+use App\State\UserPasswordHasherProcessor;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
-use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -31,7 +30,7 @@ use Symfony\Component\Validator\Constraints as Assert;
         ),
         new Post(
             security: "is_granted('ROLE_ADMIN')",
-            processor: UserPasswordHasher::class,
+            processor: UserPasswordHasherProcessor::class,
             validationContext: ['groups' => ['user:create']]
         ),
         new Get(
@@ -39,11 +38,11 @@ use Symfony\Component\Validator\Constraints as Assert;
         ),
         new Put(
             security: "is_granted('ROLE_ADMIN') or object.owner == user",
-            processor: UserPasswordHasher::class
+            processor: UserPasswordHasherProcessor::class
         ),
         new Patch(
             security: "is_granted('ROLE_ADMIN') or object.owner == user",
-            processor: UserPasswordHasher::class
+            processor: UserPasswordHasherProcessor::class
         ),
         new Delete(
             security: "is_granted('ROLE_ADMIN')"
@@ -69,6 +68,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Assert\Email]
     private ?string $email = null;
 
+    /**
+     * @var array<string> User role(s)
+     */
     #[ORM\Column]
     private array $roles = [];
 
@@ -76,7 +78,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @var string The hashed password
      */
     #[ORM\Column(type: Types::STRING)]
-    private ?string $password = null;
+    private string $password;
 
     #[Assert\NotBlank(groups: ['user:create'])]
     #[Groups(['user:create', 'user:update'])]
@@ -123,8 +125,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * A visual identifier that represents this user.
-     *
      * @see UserInterface
      */
     public function getUserIdentifier(): string
@@ -151,6 +151,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return array_unique($roles);
     }
 
+    /**
+     * @param array<string> $roles
+     */
     public function setRoles(array $roles): static
     {
         $this->roles = $roles;
@@ -195,7 +198,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function eraseCredentials(): void
     {
-        // If you store any temporary, sensitive data on the user, clear it here
         $this->plainPassword = null;
     }
 

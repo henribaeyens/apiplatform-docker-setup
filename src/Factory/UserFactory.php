@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace App\Factory;
 
 use App\Entity\User;
+use App\Entity\UserInterface;
 use App\Repository\UserRepository;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
-use Symfony\Component\Security\Core\User\UserInterface;
 
 final class UserFactory implements UserFactoryInterface
 {
@@ -25,9 +25,9 @@ final class UserFactory implements UserFactoryInterface
         array $roles,
         bool $verified = false
     ): UserInterface {
-        $userExists = $this->userRepository->findOneBy(['email' => $email]);
+        $userExists = $this->userRepository->findOneByEmail($email);
 
-        if (null !== $userExists) {
+        if ($userExists instanceof UserInterface) {
             throw new \RuntimeException(sprintf('There is already a user registered with the "%s" email.', $email));
         }
 

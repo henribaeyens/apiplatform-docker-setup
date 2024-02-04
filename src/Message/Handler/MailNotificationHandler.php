@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Message\Handler;
 
 use App\Message\MailNotification;
@@ -14,7 +16,7 @@ class MailNotificationHandler
     ) {
     }
 
-    public function __invoke(MailNotification $message)
+    public function __invoke(MailNotification $message): void
     {
         $this->mailer->sendNotification($message->getContent());
     }

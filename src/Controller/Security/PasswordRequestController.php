@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controller\Security;
 
+use App\Entity\UserInterface;
 use App\Form\Type\ResetPasswordRequestFormType;
 use App\Repository\UserRepository;
 use App\Service\Mailer;
@@ -14,7 +15,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\AsController;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Csrf\TokenGenerator\TokenGeneratorInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -42,7 +42,7 @@ final class PasswordRequestController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $email = $form->get('email')->getData();
+            $email = (string) $form->get('email')->getData();
             /** @var UserInterface|null $user */
             $user = $this->userRepository->findAdminByEmail($email);
 

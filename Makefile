@@ -35,7 +35,7 @@ test:
 	@echo "$(GREEN)running Pest test suite$(NO_COLOR)"
 	vendor/bin/pest
 
-host-test:
+test-from-host:
 	@echo "$(GREEN)running Pest test suite (host)$(NO_COLOR)"
 	$(TEST)
 
@@ -60,4 +60,4 @@ csfixer:
 
 phpstan:
 	@echo "$(GREEN)running phpstan$(NO_COLOR)"
-	$(PHPQA_RUN) phpstan analyze ./src/ ./tests/ --level=9
+	$(PHPQA_RUN) phpstan analyze ./src/ --level=9

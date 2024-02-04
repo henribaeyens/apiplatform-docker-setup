@@ -4,15 +4,17 @@ declare(strict_types=1);
 
 namespace App\Service;
 
+use App\Entity\UserInterface;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Address;
 use Symfony\Component\Mime\Email;
+use Symfony\Component\Mime\Exception\InvalidArgumentException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Environment;
 
-class Mailer
+final class Mailer
 {
     public const FROM = 'API';
     public const FROM_ADMIN = 'API Admin';
@@ -40,8 +42,6 @@ class Mailer
 
             return true;
         } catch (TransportExceptionInterface $e) {
-            dd($e);
-
             return false;
         }
     }
@@ -60,18 +60,20 @@ class Mailer
 
             return true;
         } catch (TransportExceptionInterface $e) {
-            dd($e);
-
             return false;
         }
     }
 
     public function sendUserVWelcomeMessage(UserInterface $user): bool
     {
-        /** @var UserInterface $user */
+        try {
+            $to = Address::create(sprintf('%s %s <%s>', $user->getFirstName(), $user->getLastName(), $user->getEmail()));
+        } catch (InvalidArgumentException $e) {
+            return false;
+        }
         $email = (new Email())
             ->from(sprintf('%s <%s>', self::FROM, self::FROM_EMAIL))
-            ->to($user->getEmail())
+            ->to($to)
             ->subject(sprintf('Welcome %s!', $user->getFirstName()))
             ->html('Some welcome blah blah blah');
 
@@ -80,15 +82,12 @@ class Mailer
 
             return true;
         } catch (TransportExceptionInterface $e) {
-            dd($e);
-
             return false;
         }
     }
 
     public function sendUserVerifiedNotification(UserInterface $user): bool
     {
-        /** @var UserInterface $user */
         $email = (new Email())
            ->from(sprintf('%s <%s>', self::FROM, self::FROM_EMAIL))
            ->to('you@example.com')
@@ -100,22 +99,24 @@ class Mailer
 
             return true;
         } catch (TransportExceptionInterface $e) {
-            dd($e);
-
             return false;
         }
     }
 
     public function sendEmailVerificationCode(UserInterface $user): bool
     {
-        /** @var UserInterface $user */
+        try {
+            $to = Address::create(sprintf('%s %s <%s>', $user->getFirstName(), $user->getLastName(), $user->getEmail()));
+        } catch (InvalidArgumentException $e) {
+            return false;
+        }
         $body = $this->twig->render('Registration/Email/email_verification_code.html.twig', [
             'user' => $user,
         ]);
 
         $email = (new Email())
             ->from(sprintf('%s <%s>', self::FROM, self::FROM_EMAIL))
-            ->to($user->getEmail())
+            ->to($to)
             ->subject($this->translator->trans('email.subject.email_verification'))
             ->html($body);
 
@@ -124,15 +125,17 @@ class Mailer
 
             return true;
         } catch (TransportExceptionInterface $e) {
-            dd($e);
-
             return false;
         }
     }
 
     public function sendResettingEmailMessage(UserInterface $user): bool
     {
-        /** @var UserInterface $user */
+        try {
+            $to = Address::create(sprintf('%s %s <%s>', $user->getFirstName(), $user->getLastName(), $user->getEmail()));
+        } catch (InvalidArgumentException $e) {
+            return false;
+        }
         $url = $this->urlGenerator->generate('admin_password_reset', [
             'token' => $user->getRecoveryToken(),
         ], UrlGeneratorInterface::ABSOLUTE_URL);
@@ -144,7 +147,7 @@ class Mailer
 
         $email = (new Email())
             ->from(sprintf('%s <%s>', self::FROM_ADMIN, self::FROM_EMAIL))
-            ->to($user->getEmail())
+            ->to($to)
             ->subject($this->translator->trans('email.subject.password_reset'))
             ->html($body);
 
@@ -153,8 +156,6 @@ class Mailer
 
             return true;
         } catch (TransportExceptionInterface $e) {
-            dd($e);
-
             return false;
         }
     }

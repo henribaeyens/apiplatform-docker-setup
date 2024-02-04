@@ -6,9 +6,9 @@ namespace App\Model;
 
 class ResetPasswordModel
 {
-    protected $plainPassword;
+    protected string $plainPassword;
 
-    public function getPlainPassword(): ?string
+    public function getPlainPassword(): string
     {
         return $this->plainPassword;
     }

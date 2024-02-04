@@ -18,14 +18,14 @@ trait Timestampable
     private ?\DateTimeInterface $updatedAt;
 
     #[PrePersist]
-    public function onPrePersist()
+    public function onPrePersist(): void
     {
         $this->createdAt = new \DateTime();
         $this->updatedAt = new \DateTime();
     }
 
     #[PreUpdate]
-    public function onPreUpdate()
+    public function onPreUpdate(): void
     {
         $this->updatedAt = new \DateTime();
     }
@@ -61,7 +61,7 @@ trait Timestampable
     /**
      * Get updatedAt.
      */
-    public function getUpdatedAt(): \DateTimeInterface
+    public function getUpdatedAt(): ?\DateTimeInterface
     {
         return $this->updatedAt;
     }

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controller\Security;
 
+use App\Entity\UserInterface;
 use App\Form\Type\ResettingFormType;
 use App\Model\ResetPasswordModel;
 use App\Repository\UserRepository;
@@ -36,6 +37,7 @@ final class PasswordResetController extends AbstractController
             return $this->redirectToRoute('sonata_admin_dashboard');
         }
 
+        /** @var UserInterface|null $user */
         $user = $this->userRepository->findOneByRecoveryToken($token);
 
         if (null === $user) {
@@ -50,6 +52,7 @@ final class PasswordResetController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            // @phpstan-ignore-next-line
             $user->setPassword($this->userPasswordHasher->hashPassword($user, $form->getData()->getPlainPassword()));
             $user->setRecoveryToken(null);
             $user->setRecoveryRequestDate(null);

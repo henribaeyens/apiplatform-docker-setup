@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Admin\Controller;
 
+use App\Entity\User;
 use App\Enum\UserRole;
 use App\Filter\JsonListFilter;
 use Sonata\AdminBundle\Admin\AbstractAdmin;
@@ -142,7 +143,7 @@ final class UserController extends AbstractAdmin
 
     protected function preUpdate(object $user): void
     {
-        /* @var UserInterface $user */
+        /** @var User $user */
         if (null !== $user->getPlainPassword()) {
             $hashedPassword = $this->passwordHasher->hashPassword($user, $user->getPlainPassword());
             $user->setPassword($hashedPassword);
@@ -151,6 +152,7 @@ final class UserController extends AbstractAdmin
 
     protected function prePersist(object $user): void
     {
+        /** @var User $user */
         if (null !== $user->getPlainPassword()) {
             $hashedPassword = $this->passwordHasher->hashPassword($user, $user->getPlainPassword());
             $user->setPassword($hashedPassword);

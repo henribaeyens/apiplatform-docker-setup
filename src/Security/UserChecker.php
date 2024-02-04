@@ -4,19 +4,20 @@ declare(strict_types=1);
 
 namespace App\Security;
 
+use App\Entity\UserInterface;
 use App\Exception\NotVerifiedException;
 use Symfony\Component\Security\Core\User\UserCheckerInterface;
-use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Core\User\UserInterface as CoreUserInterface;
 
 final class UserChecker implements UserCheckerInterface
 {
-    public function checkPreAuth(UserInterface $user)
+    public function checkPreAuth(CoreUserInterface $user)
     {
     }
 
-    public function checkPostAuth(UserInterface $user)
+    public function checkPostAuth(CoreUserInterface $user)
     {
-        if (!$user instanceof UserInterface) {
+        if (!$user instanceof CoreUserInterface) {
             return;
         }
 
