@@ -55,6 +55,7 @@ make init
 - install packages using composer
 - create the test database if it does not exist
 - run the migrations for both the **test** and **dev** environments
+- load the data fixtures in the test environment
 - generate the jwt keys if they do not exist
 
 ## Rebuilding the project
