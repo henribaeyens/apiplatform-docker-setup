@@ -1,0 +1,44 @@
+#!/bin/bash
+
+set -e
+DIR=$(dirname "$(realpath "$BASH_SOURCE")")
+source "$DIR/.common"
+cd "$DIR/.."
+
+usage() {
+    echo "Run migrations for a given env"
+    echo
+    echo "Usage: $0 [options]"
+    echo "Options:"
+    echo "  -dryrun             run in dry run mode"
+    echo "  -h|--help           display this help."
+}
+
+DRYRUN=0
+
+while [ $# -gt 0 ]; do
+    case $1 in
+        -dryrun)
+            DRYNRUN=1
+            ;;
+        -h|--help)
+            usage
+            exit
+            ;;
+        *)
+            error "Unknown option $1"
+            exit
+            ;;
+    esac
+    shift
+done
+
+if [ $DRYNRUN -eq 1 ]
+    then
+        cmd docker-compose run --rm srvc_phpqa php-cs-fixer fix --rules=@Symfony --verbose --dry-run ./src
+        cmd docker-compose run --rm srvc_phpqa php-cs-fixer fix --rules=@Symfony --verbose --dry-run ./tests
+else
+    cmd docker-compose run --rm srvc_phpqa php-cs-fixer fix --rules=@Symfony --verbose ./src
+    cmd docker-compose run --rm srvc_phpqa php-cs-fixer fix --rules=@Symfony --verbose ./src
+fi
+

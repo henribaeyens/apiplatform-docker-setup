@@ -31,6 +31,10 @@ Accessible on https://mail.api.docker.localhost
 ## srvc_rabbitmq
 Loads up rabbitmq   
 Accessible on https://rmq.api.docker.localhost
+## srvc_phpqa
+Loads up phpqa.  
+This service is used to run code analysis tools.
+
 
 # Starting up
 
@@ -54,11 +58,13 @@ make init
 - generate the jwt keys if they do not exist
 
 ## Rebuilding the project
+
 ```
 make rebuild
 ```
 
 # Doctrine migrations
+
 Migrations are performed at build time. The following command can be invoked after the generation of new migrations:
 ```
 make migrate
@@ -87,13 +93,7 @@ Tests are done using pest. The Pest documentation is at https://pestphp.com/docs
 A few very basic tests have been implemented.  
 
 Run the tests with the following command:
-### From the host shell
 ```
-make test-from-host
-```
-### From the php container's shell
-```
-bin/bash # to connect to container's shell
 make test
 ```
 
@@ -122,7 +122,7 @@ A user who does not have the admin role cannot request other users.
 ### Test 5
 A user registers and is verified.   
 This is a two-step process: upon successful registration, the user is sent a verification code via email. The code is then POSTed to the API to verify the user.   
-This would typically be done via an interface (React or whatever)
+This would typically be done via some front-end interface.
 
 
 # Code quality analysis
@@ -135,3 +135,11 @@ make csfixer
 ```
 make phpstan
 ```
+
+# Makefile commands
+The following commands are "context sensitive", which means they can be invoked either from the host shell or the container's (ie. srvc_php)
+- make migrate
+- make load-fixtures
+- make test  
+
+The others are to be invoked from the host.

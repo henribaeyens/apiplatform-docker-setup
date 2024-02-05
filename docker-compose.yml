@@ -50,7 +50,6 @@ services:
         volumes:
             - .:/var/www/html
             #- /var/www/html/vendor/
-            #- /var/www/html/node_modules/
 
     srvc_nginx:
         container_name: ${PROJECT_NAME}_nginx
@@ -122,6 +121,13 @@ services:
             interval: 10s
             timeout: 5s
             retries: 3
+
+    srvc_phpqa:
+        container_name: ${PROJECT_NAME}_phpqa
+        image: jakzal/phpqa:php8.1
+        working_dir: /var/www/html
+        volumes:
+            - .:/var/www/html
 
 volumes:
     rabbitmq_data:
