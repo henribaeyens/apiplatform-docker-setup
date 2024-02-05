@@ -6,11 +6,12 @@ source "$DIR/.common"
 cd "$DIR/.."
 
 DOCKERENV="/.dockerenv"
-PEST="vendor/bin/pest"
+DFL="bin/console doctrine:fixtures:load --env test --no-interaction"
 
 if [ -e $DOCKERENV -a -f $DOCKERENV ]
     then
-        cmd $PEST
+        cmd $DFL
 else
-    cmd docker-compose run --rm srvc_php $PEST
+    cmd docker-compose run --rm srvc_php $DFL
 fi
+

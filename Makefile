@@ -16,8 +16,9 @@ STOP = bin/stop
 CLEAN = bin/clean
 TEST = bin/test
 MIGRATE = bin/migrate
-PHPQA = jakzal/phpqa:php8.1
-PHPQA_RUN = $(DOCKER_RUN) --init --rm -v $(PWD):/var/www/html -w /var/www/html $(PHPQA)
+LOADFIXTURES = bin/load-fixtures
+CSFIXER=bin/csfixer
+PHPSTAN=bin/phpstan
 
 init:
 	$(MAKE) build
@@ -33,10 +34,6 @@ rebuild:
 
 test:
 	@echo "$(GREEN)running Pest test suite$(NO_COLOR)"
-	vendor/bin/pest
-
-test-from-host:
-	@echo "$(GREEN)running Pest test suite (host)$(NO_COLOR)"
 	$(TEST)
 
 migrate:
@@ -46,18 +43,16 @@ migrate:
 
 load-fixtures:
 	@echo "$(GREEN)loading fixture$(NO_COLOR)"
-	$(COMPOSE) run --rm srvc_php $(CONSOLE) doctrine:fixtures:load --env test --no-interaction
+	$(LOADFIXTURES)
 
 csfixer-dryrun:
 	@echo "$(GREEN)running cs-fixer on dry run mode$(NO_COLOR)"
-	$(PHPQA_RUN) php-cs-fixer fix --rules=@Symfony --verbose --dry-run ./src/
-	$(PHPQA_RUN) php-cs-fixer fix --rules=@Symfony --verbose --dry-run ./tests/
+	$(CSFIXER) -dryrun
 
 csfixer:
 	@echo "$(GREEN)running cs-fixer$(NO_COLOR)"
-	$(PHPQA_RUN) php-cs-fixer fix --rules=@Symfony --verbose ./src
-	$(PHPQA_RUN) php-cs-fixer fix --rules=@Symfony --verbose ./tests/
+	$(CSFIXER)
 
 phpstan:
 	@echo "$(GREEN)running phpstan$(NO_COLOR)"
-	$(PHPQA_RUN) phpstan analyze ./src/ --level=9
+	$(PHPSTAN)
