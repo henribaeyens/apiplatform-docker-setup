@@ -44,14 +44,16 @@ final class PasswordRequestController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $email = (string) $form->get('email')->getData();
             /** @var UserInterface|null $user */
-            $user = $this->userRepository->findAdminByEmail($email);
+            $user = $this->userRepository->findOneAdminByEmail($email);
 
             if (null !== $user) {
                 if ($user->isRecoveryRequestExpired($this->ttl * 3600)) {
                     $this->addFlash(
                         'error',
-                        $this->translator->trans('flash.error.token_has_expired')
+                        $this->translator->trans('flash.error.token_lifespan_not_exceeded', ['%tokenLifetime%' => $this->ttl])
                     );
+
+                    return $this->redirectToRoute('admin_password_request');
                 }
 
                 if (null === $user->getRecoveryToken()) {

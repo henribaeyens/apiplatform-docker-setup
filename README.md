@@ -32,8 +32,7 @@ Accessible on https://mail.api.docker.localhost
 Loads up rabbitmq   
 Accessible on https://rmq.api.docker.localhost
 ## srvc_phpqa
-Loads up phpqa.  
-This service is used to run code analysis tools.
+Loads up phpqa (https://github.com/jakzal/phpqa), a docker image allowing us to run code analysis tools.
 
 
 # Starting up
