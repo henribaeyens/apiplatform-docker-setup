@@ -7,7 +7,6 @@ namespace App\Repository;
 use App\Entity\User;
 use App\Entity\UserInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -52,23 +51,20 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $this->getEntityManager()->flush();
     }
 
-    public function findAdminByEmail(string $email): UserInterface|null
+    public function findOneAdminByEmail(string $email): UserInterface|null
     {
-        try {
-            $user =
-                $this->createQueryBuilder('u')
-                    ->andWhere('u.email = :email')
-                    ->andWhere('JSON_CONTAINS(u.roles, :role) = 1')
-                    ->setParameters([
-                        'email' => $email,
-                        'role' => '"ROLE_ADMIN"',
-                    ])
-                    ->getQuery()
-                    ->getOneOrNullResult()
-            ;
-        } catch (NonUniqueResultException $e) {
-            return null;
-        }
+        /** @var UserInterface|null $user */
+        $user =
+            $this->createQueryBuilder('u')
+                ->andWhere('u.email = :email')
+                ->andWhere('JSON_CONTAINS(u.roles, :role) = 1')
+                ->setParameters([
+                    'email' => $email,
+                    'role' => '"ROLE_ADMIN"',
+                ])
+                ->getQuery()
+                ->getOneOrNullResult()
+        ;
 
         return $user;
     }
