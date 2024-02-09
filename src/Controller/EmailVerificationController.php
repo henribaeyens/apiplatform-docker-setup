@@ -4,16 +4,18 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use App\Entity\UserInterface;
-use App\Repository\UserRepository;
 use App\Service\Mailer;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\Entity\UserInterface;
+use App\Dto\EmailVerificationDto;
+use App\Repository\UserRepository;
 use Symfony\Bundle\SecurityBundle\Security;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Attribute\AsController;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpKernel\Attribute\AsController;
+use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 #[AsController]
 final class EmailVerificationController extends AbstractController
@@ -26,13 +28,12 @@ final class EmailVerificationController extends AbstractController
     }
 
     #[Route('/email_verification', name: 'email_verification', methods: ['POST'])]
-    public function __invoke(Request $request): JsonResponse
+    public function __invoke(
+        #[MapRequestPayload] EmailVerificationDto $verificationData,
+    ): JsonResponse
     {
-        $data = (array) json_decode($request->getContent(), true);
-        $emailVerificationCode = (string) $data['emailVerificationCode'];
-
         /** @var UserInterface $user */
-        $user = $this->userRepository->findOneByEmailVerificationCode($emailVerificationCode);
+        $user = $this->userRepository->findOneByEmailVerificationCode($verificationData->emailVerificationCode);
         if (null === $user) {
             return new JsonResponse([
                 'code' => Response::HTTP_BAD_REQUEST,
