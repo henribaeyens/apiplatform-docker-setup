@@ -13,5 +13,4 @@ final class EmailVerificationDto
         public ?string $emailVerificationCode,
     ) {
     }
-
 }

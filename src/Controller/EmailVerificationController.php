@@ -4,18 +4,17 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use App\Service\Mailer;
-use App\Entity\UserInterface;
 use App\Dto\EmailVerificationDto;
+use App\Entity\UserInterface;
 use App\Repository\UserRepository;
+use App\Service\Mailer;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\AsController;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Routing\Annotation\Route;
 
 #[AsController]
 final class EmailVerificationController extends AbstractController
@@ -30,8 +29,7 @@ final class EmailVerificationController extends AbstractController
     #[Route('/email_verification', name: 'email_verification', methods: ['POST'])]
     public function __invoke(
         #[MapRequestPayload] EmailVerificationDto $verificationData,
-    ): JsonResponse
-    {
+    ): JsonResponse {
         /** @var UserInterface $user */
         $user = $this->userRepository->findOneByEmailVerificationCode($verificationData->emailVerificationCode);
         if (null === $user) {

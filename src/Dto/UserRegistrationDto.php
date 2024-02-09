@@ -22,5 +22,4 @@ final class UserRegistrationDto
         public ?string $lastName,
     ) {
     }
-
 }

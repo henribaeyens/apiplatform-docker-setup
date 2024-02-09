@@ -4,20 +4,20 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use App\Enum\UserRole;
-use App\Service\Mailer;
 use App\Dto\UserRegistrationDto;
-use App\Repository\UserRepository;
-use App\Helper\RandomnessGenerator;
+use App\Enum\UserRole;
 use App\Factory\UserFactoryInterface;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use App\Helper\RandomnessGenerator;
+use App\Repository\UserRepository;
+use App\Service\Mailer;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\Serializer\SerializerInterface;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\AsController;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\Context\Normalizer\ObjectNormalizerContextBuilder;
+use Symfony\Component\Serializer\SerializerInterface;
 
 #[AsController]
 final class UserRegistrationController extends AbstractController
@@ -34,8 +34,7 @@ final class UserRegistrationController extends AbstractController
     #[Route('/register', name: 'user_registration', methods: ['POST'])]
     public function __invoke(
         #[MapRequestPayload] UserRegistrationDto $signupData,
-    ): JsonResponse
-    {
+    ): JsonResponse {
         /* @var UserInterface $user */
         $user = $this->userFactory->create(
             firstName: $signupData->firstName,
