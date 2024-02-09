@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Event;
+namespace App\Event\Listener;
 
 use App\Entity\User;
 use App\Entity\UserInterface;

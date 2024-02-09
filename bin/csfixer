@@ -6,7 +6,7 @@ source "$DIR/.common"
 cd "$DIR/.."
 
 usage() {
-    echo "Run migrations for a given env"
+    echo "Run php-cs-fixer"
     echo
     echo "Usage: $0 [options]"
     echo "Options:"
@@ -33,7 +33,7 @@ while [ $# -gt 0 ]; do
     shift
 done
 
-if [ $DRYNRUN -eq 1 ]
+if [ $DRYRUN -eq 1 ]
     then
         cmd docker-compose run --rm srvc_phpqa php-cs-fixer fix --rules=@Symfony --verbose --dry-run ./src
         cmd docker-compose run --rm srvc_phpqa php-cs-fixer fix --rules=@Symfony --verbose --dry-run ./tests
